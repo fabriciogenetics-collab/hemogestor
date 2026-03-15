@@ -4,449 +4,281 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Estoque de Insumos</title>
 
 <style>
+
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f4f4f4;
+margin:0;
+font-family:Arial;
+background:#f4f4f4;
 }
 
 .topo{
-  background:#b30000;
-  color:white;
-  padding:20px;
-  font-size:22px;
-  font-weight:bold;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+background:#b30000;
+color:white;
+padding:20px;
+font-size:22px;
+font-weight:bold;
+display:flex;
+justify-content:space-between;
 }
 
 .topo a{
-  color:white;
-  text-decoration:none;
-  background:#d91c1c;
-  padding:10px 15px;
-  border-radius:6px;
+color:white;
+text-decoration:none;
+background:#d91c1c;
+padding:10px 15px;
+border-radius:6px;
 }
 
 .container{
-  padding:30px;
+padding:30px;
 }
 
 .card{
-  background:white;
-  padding:25px;
-  border-radius:10px;
-  box-shadow:0 0 10px rgba(0,0,0,0.1);
-  max-width:1100px;
-  margin-bottom:30px;
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+margin-bottom:30px;
 }
 
-input,select,textarea{
-  width:100%;
-  padding:10px;
-  margin-top:5px;
-  margin-bottom:15px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  box-sizing:border-box;
-  font-size:15px;
+.alerta{
+background:#fff3cd;
+border:1px solid #ffeeba;
+color:#856404;
+padding:15px;
+border-radius:8px;
+margin-bottom:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+}
+
+.mini{
+background:#fafafa;
+border:1px solid #eee;
+padding:15px;
+border-radius:8px;
+}
+
+.mini strong{
+display:block;
+font-size:20px;
+color:#b30000;
+margin-top:5px;
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin-bottom:12px;
+border-radius:6px;
+border:1px solid #ccc;
 }
 
 button{
-  background:#c40000;
-  color:white;
-  border:none;
-  padding:12px 18px;
-  border-radius:6px;
-  cursor:pointer;
-  font-size:16px;
-  margin-right:8px;
-}
-
-button.secundario{
-  background:#666;
-}
-
-button.excluir{
-  background:#8b0000;
+background:#c40000;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:6px;
+cursor:pointer;
 }
 
 table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:10px;
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
 }
 
 th,td{
-  border-bottom:1px solid #ddd;
-  padding:10px;
-  text-align:left;
-  font-size:14px;
-  vertical-align:top;
+border-bottom:1px solid #ddd;
+padding:10px;
+text-align:left;
 }
 
-th{
-  background:#fafafa;
-}
-
-.acoes button{
-  padding:8px 10px;
-  font-size:13px;
-  margin-bottom:4px;
-}
-
-.info-edicao{
-  background:#fff3cd;
-  color:#856404;
-  border:1px solid #ffeeba;
-  padding:12px;
-  border-radius:8px;
-  margin-bottom:15px;
-  display:none;
-}
-
-.grid-resumo{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
-}
-
-.mini-card{
-  background:#fafafa;
-  border:1px solid #eee;
-  border-radius:10px;
-  padding:16px;
-}
-
-.mini-card strong{
-  display:block;
-  color:#b30000;
-  font-size:22px;
-  margin-top:8px;
-}
 </style>
+
 </head>
 
 <body>
 
 <div class="topo">
-  <span>Estoque de Insumos</span>
-  <a href="dashboard.html">Voltar</a>
+Estoque de Insumos
+<a href="dashboard.html">Voltar</a>
 </div>
 
 <div class="container">
 
-  <div class="card">
-    <h3>Novo movimento de estoque</h3>
+<div id="alertaEstoque"></div>
 
-    <div id="infoEdicao" class="info-edicao">
-      Você está editando um movimento de estoque.
-    </div>
+<div class="card">
 
-    <label>Item *</label>
-    <input id="item" placeholder="Nome do insumo">
+<h3>Novo movimento</h3>
 
-    <label>Tipo de movimento *</label>
-    <select id="tipo_movimento">
-      <option value="">Selecione</option>
-      <option>Entrada</option>
-      <option>Saída</option>
-      <option>Descarte</option>
-    </select>
+<label>Item</label>
+<input id="item">
 
-    <label>Quantidade *</label>
-    <input id="quantidade" type="number" min="1" placeholder="Quantidade">
+<label>Tipo</label>
+<select id="tipo">
+<option>Entrada</option>
+<option>Saída</option>
+<option>Descarte</option>
+</select>
 
-    <label>Motivo</label>
-    <input id="motivo" placeholder="Ex.: uso em procedimento, vencimento, dano">
+<label>Quantidade</label>
+<input id="quantidade" type="number">
 
-    <label>Lote</label>
-    <input id="lote" placeholder="Número do lote">
+<label>Motivo</label>
+<input id="motivo">
 
-    <label>Data do movimento *</label>
-    <input type="date" id="data_movimento">
+<label>Lote</label>
+<input id="lote">
 
-    <button id="btnSalvar">Salvar movimento</button>
-    <button id="btnCancelar" class="secundario" style="display:none;">Cancelar edição</button>
-  </div>
+<label>Data</label>
+<input id="data" type="date">
 
-  <div class="card">
-    <h3>Resumo do estoque atual</h3>
-    <div id="resumoEstoque" class="grid-resumo"></div>
-  </div>
+<button onclick="salvar()">Salvar</button>
 
-  <div class="card">
-    <h3>Movimentos registrados</h3>
+</div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Data</th>
-          <th>Item</th>
-          <th>Tipo</th>
-          <th>Quantidade</th>
-          <th>Motivo</th>
-          <th>Lote</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="lista"></tbody>
-    </table>
-  </div>
+<div class="card">
+
+<h3>Estoque atual</h3>
+
+<div class="grid" id="resumo"></div>
+
+</div>
+
+<div class="card">
+
+<h3>Movimentos</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Data</th>
+<th>Item</th>
+<th>Tipo</th>
+<th>Quantidade</th>
+<th>Motivo</th>
+</tr>
+</thead>
+
+<tbody id="lista"></tbody>
+
+</table>
+
+</div>
 
 </div>
 
 <script type="module">
+
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
-const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
-const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
+const supabaseUrl="https://awtszrqsnsgncdrlzizy.supabase.co"
+const supabaseKey="sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
 
-const supabase = createClient(supabaseUrl, supabaseKey)
+const supabase=createClient(supabaseUrl,supabaseKey)
 
-let editandoId = null
+async function salvar(){
 
-function limparFormulario(){
-  document.getElementById("item").value = ""
-  document.getElementById("tipo_movimento").value = ""
-  document.getElementById("quantidade").value = ""
-  document.getElementById("motivo").value = ""
-  document.getElementById("lote").value = ""
-  document.getElementById("data_movimento").value = ""
-}
+const item=document.getElementById("item").value
+const tipo=document.getElementById("tipo").value
+const quantidade=document.getElementById("quantidade").value
+const motivo=document.getElementById("motivo").value
+const lote=document.getElementById("lote").value
+const data=document.getElementById("data").value
 
-function entrarModoEdicao(registro){
-  editandoId = registro.id
+await supabase
+.from("estoque")
+.insert([{item,tipo_movimento:tipo,quantidade,motivo,lote,data_movimento:data}])
 
-  document.getElementById("item").value = registro.item || ""
-  document.getElementById("tipo_movimento").value = registro.tipo_movimento || ""
-  document.getElementById("quantidade").value = registro.quantidade || ""
-  document.getElementById("motivo").value = registro.motivo || ""
-  document.getElementById("lote").value = registro.lote || ""
-  document.getElementById("data_movimento").value = registro.data_movimento || ""
+carregar()
 
-  document.getElementById("infoEdicao").style.display = "block"
-  document.getElementById("btnSalvar").innerText = "Atualizar movimento"
-  document.getElementById("btnCancelar").style.display = "inline-block"
-
-  window.scrollTo({ top: 0, behavior: "smooth" })
-}
-
-function sairModoEdicao(){
-  editandoId = null
-  limparFormulario()
-  document.getElementById("infoEdicao").style.display = "none"
-  document.getElementById("btnSalvar").innerText = "Salvar movimento"
-  document.getElementById("btnCancelar").style.display = "none"
-}
-
-function calcularResumo(movimentos){
-  const mapa = {}
-
-  movimentos.forEach(m => {
-    const item = m.item || "Sem nome"
-    if(!mapa[item]){
-      mapa[item] = 0
-    }
-
-    const qtd = Number(m.quantidade) || 0
-
-    if(m.tipo_movimento === "Entrada"){
-      mapa[item] += qtd
-    }
-
-    if(m.tipo_movimento === "Saída" || m.tipo_movimento === "Descarte"){
-      mapa[item] -= qtd
-    }
-  })
-
-  return mapa
-}
-
-function renderizarResumo(movimentos){
-  const resumo = calcularResumo(movimentos)
-  const area = document.getElementById("resumoEstoque")
-  area.innerHTML = ""
-
-  const itens = Object.keys(resumo)
-
-  if(itens.length === 0){
-    area.innerHTML = "<p>Nenhum item movimentado ainda.</p>"
-    return
-  }
-
-  itens.forEach(item => {
-    const div = document.createElement("div")
-    div.className = "mini-card"
-    div.innerHTML = `
-      <span>${item}</span>
-      <strong>${resumo[item]}</strong>
-    `
-    area.appendChild(div)
-  })
 }
 
 async function carregar(){
-  const { data, error } = await supabase
-    .from("estoque")
-    .select("*")
-    .order("created_at", { ascending:false })
 
-  const lista = document.getElementById("lista")
-  lista.innerHTML = ""
+const {data}=await supabase
+.from("estoque")
+.select("*")
 
-  if(error){
-    lista.innerHTML = `<tr><td colspan="7">Erro ao carregar registros: ${error.message}</td></tr>`
-    return
-  }
+const lista=document.getElementById("lista")
+lista.innerHTML=""
 
-  renderizarResumo(data || [])
+let mapa={}
 
-  if(!data || data.length === 0){
-    lista.innerHTML = `<tr><td colspan="7">Nenhum movimento registrado.</td></tr>`
-    return
-  }
+data.forEach(m=>{
 
-  data.forEach(r => {
-    const tr = document.createElement("tr")
+lista.innerHTML+=`
+<tr>
+<td>${m.data_movimento}</td>
+<td>${m.item}</td>
+<td>${m.tipo_movimento}</td>
+<td>${m.quantidade}</td>
+<td>${m.motivo||""}</td>
+</tr>
+`
 
-    tr.innerHTML = `
-      <td>${r.data_movimento ?? ""}</td>
-      <td>${r.item ?? ""}</td>
-      <td>${r.tipo_movimento ?? ""}</td>
-      <td>${r.quantidade ?? ""}</td>
-      <td>${r.motivo ?? ""}</td>
-      <td>${r.lote ?? ""}</td>
-      <td class="acoes">
-        <button data-acao="editar" data-id="${r.id}">Editar</button>
-        <button class="excluir" data-acao="excluir" data-id="${r.id}">Excluir</button>
-      </td>
-    `
+if(!mapa[m.item]) mapa[m.item]=0
 
-    lista.appendChild(tr)
-  })
+if(m.tipo_movimento==="Entrada") mapa[m.item]+=Number(m.quantidade)
+else mapa[m.item]-=Number(m.quantidade)
 
-  lista.querySelectorAll('button[data-acao="editar"]').forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const id = btn.getAttribute("data-id")
-      const { data: registro, error } = await supabase
-        .from("estoque")
-        .select("*")
-        .eq("id", id)
-        .single()
+})
 
-      if(error){
-        alert("Erro ao buscar registro: " + error.message)
-        return
-      }
+const resumo=document.getElementById("resumo")
+resumo.innerHTML=""
 
-      entrarModoEdicao(registro)
-    })
-  })
+let alerta=""
 
-  lista.querySelectorAll('button[data-acao="excluir"]').forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const id = btn.getAttribute("data-id")
+Object.keys(mapa).forEach(item=>{
 
-      const confirmar = confirm("Deseja realmente excluir este movimento de estoque?")
-      if(!confirmar) return
+let qtd=mapa[item]
 
-      const { error } = await supabase
-        .from("estoque")
-        .delete()
-        .eq("id", id)
+resumo.innerHTML+=`
+<div class="mini">
+${item}
+<strong>${qtd}</strong>
+</div>
+`
 
-      if(error){
-        alert("Erro ao excluir: " + error.message)
-        return
-      }
+if(qtd<=3){
 
-      alert("Movimento excluído com sucesso")
-      if(editandoId && String(editandoId) === String(id)){
-        sairModoEdicao()
-      }
-      carregar()
-    })
-  })
+alerta+=`${item} → estoque: ${qtd}<br>`
+
 }
 
-document.getElementById("btnSalvar").addEventListener("click", async () => {
-  const item = document.getElementById("item").value.trim()
-  const tipo_movimento = document.getElementById("tipo_movimento").value
-  const quantidade = document.getElementById("quantidade").value
-  const motivo = document.getElementById("motivo").value.trim()
-  const lote = document.getElementById("lote").value.trim()
-  const data_movimento = document.getElementById("data_movimento").value
-
-  if(!item){
-    alert("Preencha o campo Item.")
-    return
-  }
-
-  if(!tipo_movimento){
-    alert("Selecione o Tipo de movimento.")
-    return
-  }
-
-  if(!quantidade){
-    alert("Preencha a Quantidade.")
-    return
-  }
-
-  if(!data_movimento){
-    alert("Preencha a Data do movimento.")
-    return
-  }
-
-  const payload = {
-    item,
-    tipo_movimento,
-    quantidade: Number(quantidade),
-    motivo,
-    lote,
-    data_movimento
-  }
-
-  if(editandoId){
-    const { error } = await supabase
-      .from("estoque")
-      .update(payload)
-      .eq("id", editandoId)
-
-    if(error){
-      alert("Erro ao atualizar: " + error.message)
-      return
-    }
-
-    alert("Movimento atualizado com sucesso")
-    sairModoEdicao()
-    carregar()
-    return
-  }
-
-  const { error } = await supabase
-    .from("estoque")
-    .insert([payload])
-
-  if(error){
-    alert("Erro ao salvar: " + error.message)
-    return
-  }
-
-  alert("Movimento registrado com sucesso")
-  limparFormulario()
-  carregar()
 })
 
-document.getElementById("btnCancelar").addEventListener("click", () => {
-  sairModoEdicao()
-})
+if(alerta){
+
+document.getElementById("alertaEstoque").innerHTML=`
+<div class="alerta">
+⚠️ Itens com estoque baixo<br><br>
+${alerta}
+</div>
+`
+
+}else{
+
+document.getElementById("alertaEstoque").innerHTML=""
+
+}
+
+}
 
 carregar()
+
 </script>
 
 </body>
