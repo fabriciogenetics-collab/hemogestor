@@ -113,6 +113,15 @@ th{
   margin-bottom:15px;
   display:none;
 }
+
+.info-agencia{
+  background:#eef6ff;
+  color:#0b5394;
+  border:1px solid #cfe2ff;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:15px;
+}
 </style>
 </head>
 
@@ -128,16 +137,13 @@ th{
   <div class="card">
     <h3>Nova transfusão</h3>
 
+    <div class="info-agencia">
+      Agência do usuário logado: <strong id="agenciaLogada">Carregando...</strong>
+    </div>
+
     <div id="infoEdicao" class="info-edicao">
       Você está editando uma transfusão.
     </div>
-
-    <label>Agência *</label>
-    <select id="agencia">
-      <option value="">Selecione</option>
-      <option>Guarulhos</option>
-      <option>IBCC</option>
-    </select>
 
     <label>Paciente *</label>
     <input id="paciente" placeholder="Nome ou identificação do paciente">
@@ -189,7 +195,7 @@ th{
   </div>
 
   <div class="card">
-    <h3>Transfusões registradas</h3>
+    <h3>Transfusões registradas da sua agência</h3>
 
     <table>
       <thead>
@@ -218,9 +224,40 @@ const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 let editandoId = null
+let agenciaUsuario = ""
+let perfilUsuario = ""
+let emailUsuario = ""
+
+async function carregarUsuario(){
+  const { data: sessaoData } = await supabase.auth.getSession()
+
+  if(!sessaoData.session){
+    window.location.href = "/"
+    return false
+  }
+
+  emailUsuario = sessaoData.session.user.email
+
+  const { data: usuario, error } = await supabase
+    .from("usuarios")
+    .select("*")
+    .eq("email", emailUsuario)
+    .single()
+
+  if(error || !usuario){
+    alert("Usuário não encontrado na tabela de usuários.")
+    return false
+  }
+
+  agenciaUsuario = usuario.agencia || ""
+  perfilUsuario = usuario.perfil || ""
+
+  document.getElementById("agenciaLogada").innerText = agenciaUsuario || "Não definida"
+
+  return true
+}
 
 function limparFormulario(){
-  document.getElementById("agencia").value = ""
   document.getElementById("paciente").value = ""
   document.getElementById("prontuario").value = ""
   document.getElementById("leito").value = ""
@@ -238,7 +275,6 @@ function limparFormulario(){
 function entrarModoEdicao(registro){
   editandoId = registro.id
 
-  document.getElementById("agencia").value = registro.agencia || ""
   document.getElementById("paciente").value = registro.paciente || ""
   document.getElementById("prontuario").value = registro.prontuario || ""
   document.getElementById("leito").value = registro.leito || ""
@@ -268,10 +304,18 @@ function sairModoEdicao(){
 }
 
 async function carregar(){
-  const { data, error } = await supabase
+  let query = supabase
     .from("transfusoes")
     .select("*")
     .order("created_at", { ascending:false })
+
+  if(perfilUsuario !== "ADM"){
+    query = query.eq("agencia", agenciaUsuario)
+  } else {
+    query = query.eq("agencia", agenciaUsuario)
+  }
+
+  const { data, error } = await query
 
   const lista = document.getElementById("lista")
   lista.innerHTML = ""
@@ -350,7 +394,6 @@ async function carregar(){
 }
 
 document.getElementById("btnSalvar").addEventListener("click", async () => {
-  const agencia = document.getElementById("agencia").value
   const paciente = document.getElementById("paciente").value.trim()
   const prontuario = document.getElementById("prontuario").value.trim()
   const leito = document.getElementById("leito").value.trim()
@@ -364,8 +407,8 @@ document.getElementById("btnSalvar").addEventListener("click", async () => {
   const reacao = document.getElementById("reacao").value
   const observacoes = document.getElementById("obs").value.trim()
 
-  if(!agencia){
-    alert("Selecione a Agência.")
+  if(!agenciaUsuario){
+    alert("Agência do usuário não definida.")
     return
   }
 
@@ -385,7 +428,7 @@ document.getElementById("btnSalvar").addEventListener("click", async () => {
   }
 
   const payload = {
-    agencia,
+    agencia: agenciaUsuario,
     paciente,
     prontuario,
     leito,
@@ -435,7 +478,10 @@ document.getElementById("btnCancelar").addEventListener("click", () => {
   sairModoEdicao()
 })
 
-carregar()
+const ok = await carregarUsuario()
+if(ok){
+  carregar()
+}
 </script>
 
 </body>
