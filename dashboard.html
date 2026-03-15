@@ -1,43 +1,113 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HemoGestor - Dashboard</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    .topo {
-      background: #b30000;
-      color: white;
-      padding: 18px 24px;
-      font-size: 24px;
-      font-weight: bold;
-    }
+<title>HemoGestor</title>
 
-    .container {
-      padding: 24px;
-    }
+<script type="module">
 
-    .card {
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.08);
-    }
-  </style>
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+
+const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
+const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
+
+const supabase = createClient(supabaseUrl, supabaseKey)
+
+const { data } = await supabase.auth.getSession()
+
+if(!data.session){
+
+window.location.href="/"
+
+}
+
+</script>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#f5f5f5;
+}
+
+.topo{
+background:#b30000;
+color:white;
+padding:20px;
+font-size:22px;
+font-weight:bold;
+display:flex;
+justify-content:space-between;
+}
+
+.container{
+padding:30px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 0 12px rgba(0,0,0,0.08);
+}
+
+button{
+background:#c40000;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:6px;
+cursor:pointer;
+}
+
+</style>
+
 </head>
+
 <body>
-  <div class="topo">HemoGestor</div>
-  <div class="container">
-    <div class="card">
-      <h2>Dashboard inicial</h2>
-      <p>Login funcionando com sucesso.</p>
-    </div>
-  </div>
+
+<div class="topo">
+
+<span>HemoGestor</span>
+
+<button onclick="logout()">Sair</button>
+
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Dashboard inicial</h2>
+
+<p>Login funcionando com sucesso.</p>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+
+const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
+const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
+
+const supabase = createClient(supabaseUrl, supabaseKey)
+
+window.logout = async function(){
+
+await supabase.auth.signOut()
+
+window.location.href="/"
+
+}
+
+</script>
+
 </body>
 </html>
