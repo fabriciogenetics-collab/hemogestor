@@ -1,57 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
+
 <head>
+<meta charset="UTF-8">
 <title>HemoGestor</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
+
 body{
-font-family:Arial;
+font-family: Arial;
 background:#f5f5f5;
 display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
+margin:0;
 }
 
-.card{
+.login-box{
 background:white;
 padding:40px;
 border-radius:10px;
-width:320px;
+width:350px;
 text-align:center;
-box-shadow:0 5px 15px rgba(0,0,0,0.1);
+box-shadow:0 0 15px rgba(0,0,0,0.1);
 }
 
 h1{
 color:#b30000;
+margin-bottom:30px;
 }
 
 input{
 width:100%;
-padding:10px;
-margin:10px 0;
-border:1px solid #ccc;
+padding:12px;
+margin-bottom:15px;
 border-radius:5px;
+border:1px solid #ccc;
+font-size:14px;
 }
 
 button{
 width:100%;
-padding:10px;
-background:#b30000;
+padding:12px;
+background:#c40000;
 color:white;
 border:none;
 border-radius:5px;
+font-size:16px;
 cursor:pointer;
 }
-</style>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+button:hover{
+background:#a00000;
+}
+
+#msg{
+margin-top:15px;
+color:#b30000;
+}
+
+</style>
 
 </head>
 
 <body>
 
-<div class="card">
+<div class="login-box">
 
 <h1>HemoGestor</h1>
 
@@ -61,16 +78,16 @@ cursor:pointer;
 
 <button onclick="login()">Entrar</button>
 
-<p id="msg"></p>
+<div id="msg"></div>
 
 </div>
 
 <script>
 
-const supabaseClient = supabase.createClient(
-"https://awtszrqsnsngcdrlzizy.supabase.co",
-"sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
-)
+const supabaseUrl = 'https://awtszrqsnsngcdrlzizy.supabase.co'
+const supabaseKey = 'sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb'
+
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
 
 async function login(){
 
@@ -88,6 +105,10 @@ return
 }
 
 document.getElementById("msg").innerText="Login realizado com sucesso"
+
+setTimeout(()=>{
+window.location.href="dashboard.html"
+},1500)
 
 }
 
