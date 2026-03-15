@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 
 <meta charset="UTF-8">
@@ -31,7 +32,7 @@ const profissional = document.getElementById("profissional").value
 const reacao = document.getElementById("reacao").value
 const observacoes = document.getElementById("obs").value
 
-const { error } = await supabase
+const { data:resultado, error } = await supabase
 .from("transfusoes")
 .insert([
 {
@@ -52,7 +53,9 @@ observacoes
 
 if(error){
 
-alert("Erro ao salvar")
+alert("Erro Supabase: " + error.message)
+
+console.log(error)
 
 }else{
 
@@ -182,4 +185,5 @@ Registrar transfusão
 </div>
 
 </body>
+
 </html>
