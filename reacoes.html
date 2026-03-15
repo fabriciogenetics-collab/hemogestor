@@ -8,201 +8,203 @@
 
 <style>
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f4f4f4;
+margin:0;
+font-family:Arial;
+background:#f4f4f4;
 }
 
 .topo{
-  background:#b30000;
-  color:white;
-  padding:20px;
-  font-size:22px;
-  font-weight:bold;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+background:#b30000;
+color:white;
+padding:20px;
+font-size:22px;
+font-weight:bold;
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
 .topo a{
-  color:white;
-  text-decoration:none;
-  background:#d91c1c;
-  padding:10px 15px;
-  border-radius:6px;
+color:white;
+text-decoration:none;
+background:#d91c1c;
+padding:10px 15px;
+border-radius:6px;
 }
 
 .container{
-  padding:30px;
+padding:30px;
 }
 
 .card{
-  background:white;
-  padding:25px;
-  border-radius:10px;
-  box-shadow:0 0 10px rgba(0,0,0,0.1);
-  max-width:1100px;
-  margin-bottom:30px;
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+max-width:1150px;
+margin-bottom:30px;
 }
 
 input,select,textarea{
-  width:100%;
-  padding:10px;
-  margin-top:5px;
-  margin-bottom:15px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  box-sizing:border-box;
-  font-size:15px;
+width:100%;
+padding:10px;
+margin-top:5px;
+margin-bottom:15px;
+border-radius:6px;
+border:1px solid #ccc;
+box-sizing:border-box;
 }
 
 textarea{
-  min-height:100px;
-  resize:vertical;
+min-height:100px;
 }
 
 button{
-  background:#c40000;
-  color:white;
-  border:none;
-  padding:12px 18px;
-  border-radius:6px;
-  cursor:pointer;
-  font-size:16px;
-  margin-right:8px;
-}
-
-button.secundario{
-  background:#666;
+background:#c40000;
+color:white;
+border:none;
+padding:12px 18px;
+border-radius:6px;
+cursor:pointer;
 }
 
 button.excluir{
-  background:#8b0000;
+background:#8b0000;
+}
+
+button.secundario{
+background:#666;
 }
 
 table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:10px;
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
 }
 
 th,td{
-  border-bottom:1px solid #ddd;
-  padding:10px;
-  text-align:left;
-  font-size:14px;
-  vertical-align:top;
+border-bottom:1px solid #ddd;
+padding:10px;
+text-align:left;
+font-size:14px;
 }
 
 th{
-  background:#fafafa;
+background:#fafafa;
 }
 
-.acoes button{
-  padding:8px 10px;
-  font-size:13px;
-  margin-bottom:4px;
+.info-agencia{
+background:#eef6ff;
+color:#0b5394;
+border:1px solid #cfe2ff;
+padding:12px;
+border-radius:8px;
+margin-bottom:15px;
 }
 
 .info-edicao{
-  background:#fff3cd;
-  color:#856404;
-  border:1px solid #ffeeba;
-  padding:12px;
-  border-radius:8px;
-  margin-bottom:15px;
-  display:none;
+background:#fff3cd;
+border:1px solid #ffeeba;
+padding:12px;
+border-radius:8px;
+margin-bottom:15px;
+display:none;
 }
+
 </style>
 </head>
 
 <body>
 
 <div class="topo">
-  <span>Reação Transfusional</span>
-  <a href="dashboard.html">Voltar</a>
+Reação Transfusional
+<a href="dashboard.html">Voltar</a>
 </div>
 
 <div class="container">
 
-  <div class="card">
-    <h3>Nova reação transfusional</h3>
+<div class="card">
 
-    <div id="infoEdicao" class="info-edicao">
-      Você está editando uma reação transfusional.
-    </div>
+<h3>Nova reação</h3>
 
-    <label>Agência *</label>
-    <select id="agencia">
-      <option value="">Selecione</option>
-      <option>Guarulhos</option>
-      <option>IBCC</option>
-    </select>
+<div class="info-agencia">
+Agência do usuário logado: <strong id="agenciaLogada">Carregando...</strong>
+</div>
 
-    <label>Paciente *</label>
-    <input id="paciente" placeholder="Nome ou identificação do paciente">
+<div id="infoEdicao" class="info-edicao">
+Editando reação.
+</div>
 
-    <label>Prontuário</label>
-    <input id="prontuario" placeholder="Número do prontuário">
+<label>Paciente *</label>
+<input id="paciente">
 
-    <label>Data da reação *</label>
-    <input type="date" id="data_reacao">
+<label>Prontuário</label>
+<input id="prontuario">
 
-    <label>Tipo de reação *</label>
-    <select id="tipo_reacao">
-      <option value="">Selecione</option>
-      <option>Febril não hemolítica</option>
-      <option>Alérgica</option>
-      <option>Anafilática</option>
-      <option>Hemolítica aguda</option>
-      <option>Sobrecarga circulatória</option>
-      <option>TRALI</option>
-      <option>Contaminação bacteriana</option>
-      <option>Outra</option>
-    </select>
+<label>Data da reação *</label>
+<input type="date" id="data">
 
-    <label>Classificação</label>
-    <select id="classificacao">
-      <option value="">Selecione</option>
-      <option>Leve</option>
-      <option>Moderada</option>
-      <option>Grave</option>
-    </select>
+<label>Tipo de reação *</label>
+<select id="tipo">
+<option value="">Selecione</option>
+<option>Febril não hemolítica</option>
+<option>Alérgica</option>
+<option>Anafilática</option>
+<option>Hemolítica</option>
+<option>TRALI</option>
+<option>Sobrecarga circulatória</option>
+<option>Outra</option>
+</select>
 
-    <label>Conduta</label>
-    <textarea id="conduta" placeholder="Descreva a conduta realizada"></textarea>
+<label>Classificação</label>
+<select id="classificacao">
+<option value="">Selecione</option>
+<option>Leve</option>
+<option>Moderada</option>
+<option>Grave</option>
+</select>
 
-    <label>Desfecho</label>
-    <textarea id="desfecho" placeholder="Descreva o desfecho"></textarea>
+<label>Conduta</label>
+<textarea id="conduta"></textarea>
 
-    <label>Observações</label>
-    <textarea id="observacoes" placeholder="Observações adicionais"></textarea>
+<label>Desfecho</label>
+<textarea id="desfecho"></textarea>
 
-    <button id="btnSalvar">Salvar reação</button>
-    <button id="btnCancelar" class="secundario" style="display:none;">Cancelar edição</button>
-  </div>
+<label>Observações</label>
+<textarea id="obs"></textarea>
 
-  <div class="card">
-    <h3>Reações registradas</h3>
+<button id="btnSalvar">Salvar reação</button>
+<button id="btnCancelar" class="secundario" style="display:none;">Cancelar edição</button>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Data</th>
-          <th>Agência</th>
-          <th>Paciente</th>
-          <th>Tipo</th>
-          <th>Classificação</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="lista"></tbody>
-    </table>
-  </div>
+</div>
+
+<div class="card">
+
+<h3>Reações da sua agência</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Data</th>
+<th>Agência</th>
+<th>Paciente</th>
+<th>Tipo</th>
+<th>Classificação</th>
+<th>Ações</th>
+</tr>
+</thead>
+
+<tbody id="lista"></tbody>
+
+</table>
+
+</div>
 
 </div>
 
 <script type="module">
+
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
@@ -210,208 +212,153 @@ const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-let editandoId = null
+let agenciaUsuario=""
+let editandoId=null
 
-function limparFormulario(){
-  document.getElementById("agencia").value = ""
-  document.getElementById("paciente").value = ""
-  document.getElementById("prontuario").value = ""
-  document.getElementById("data_reacao").value = ""
-  document.getElementById("tipo_reacao").value = ""
-  document.getElementById("classificacao").value = ""
-  document.getElementById("conduta").value = ""
-  document.getElementById("desfecho").value = ""
-  document.getElementById("observacoes").value = ""
-}
+async function carregarUsuario(){
 
-function entrarModoEdicao(registro){
-  editandoId = registro.id
+const {data}=await supabase.auth.getSession()
 
-  document.getElementById("agencia").value = registro.agencia || ""
-  document.getElementById("paciente").value = registro.paciente || ""
-  document.getElementById("prontuario").value = registro.prontuario || ""
-  document.getElementById("data_reacao").value = registro.data_reacao || ""
-  document.getElementById("tipo_reacao").value = registro.tipo_reacao || ""
-  document.getElementById("classificacao").value = registro.classificacao || ""
-  document.getElementById("conduta").value = registro.conduta || ""
-  document.getElementById("desfecho").value = registro.desfecho || ""
-  document.getElementById("observacoes").value = registro.observacoes || ""
+const email=data.session.user.email
 
-  document.getElementById("infoEdicao").style.display = "block"
-  document.getElementById("btnSalvar").innerText = "Atualizar reação"
-  document.getElementById("btnCancelar").style.display = "inline-block"
+const {data:usuario}=await supabase
+.from("usuarios")
+.select("*")
+.eq("email",email)
+.single()
 
-  window.scrollTo({ top: 0, behavior: "smooth" })
-}
+agenciaUsuario=usuario.agencia
 
-function sairModoEdicao(){
-  editandoId = null
-  limparFormulario()
-  document.getElementById("infoEdicao").style.display = "none"
-  document.getElementById("btnSalvar").innerText = "Salvar reação"
-  document.getElementById("btnCancelar").style.display = "none"
+document.getElementById("agenciaLogada").innerText=agenciaUsuario
+
 }
 
 async function carregar(){
-  const { data, error } = await supabase
-    .from("reacoes_transfusionais")
-    .select("*")
-    .order("created_at", { ascending:false })
 
-  const lista = document.getElementById("lista")
-  lista.innerHTML = ""
+const {data}=await supabase
+.from("reacoes_transfusionais")
+.select("*")
+.eq("agencia",agenciaUsuario)
+.order("created_at",{ascending:false})
 
-  if(error){
-    lista.innerHTML = `<tr><td colspan="6">Erro ao carregar registros: ${error.message}</td></tr>`
-    return
-  }
+const lista=document.getElementById("lista")
+lista.innerHTML=""
 
-  if(!data || data.length === 0){
-    lista.innerHTML = `<tr><td colspan="6">Nenhuma reação registrada.</td></tr>`
-    return
-  }
+data.forEach(r=>{
 
-  data.forEach(r => {
-    const tr = document.createElement("tr")
+const tr=document.createElement("tr")
 
-    tr.innerHTML = `
-      <td>${r.data_reacao ?? ""}</td>
-      <td>${r.agencia ?? ""}</td>
-      <td>${r.paciente ?? ""}</td>
-      <td>${r.tipo_reacao ?? ""}</td>
-      <td>${r.classificacao ?? ""}</td>
-      <td class="acoes">
-        <button data-acao="editar" data-id="${r.id}">Editar</button>
-        <button class="excluir" data-acao="excluir" data-id="${r.id}">Excluir</button>
-      </td>
-    `
+tr.innerHTML=`
+<td>${r.data_reacao ?? ""}</td>
+<td>${r.agencia ?? ""}</td>
+<td>${r.paciente ?? ""}</td>
+<td>${r.tipo_reacao ?? ""}</td>
+<td>${r.classificacao ?? ""}</td>
+<td>
+<button onclick="editar('${r.id}')">Editar</button>
+<button class="excluir" onclick="excluir('${r.id}')">Excluir</button>
+</td>
+`
 
-    lista.appendChild(tr)
-  })
+lista.appendChild(tr)
 
-  lista.querySelectorAll('button[data-acao="editar"]').forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const id = btn.getAttribute("data-id")
-      const { data: registro, error } = await supabase
-        .from("reacoes_transfusionais")
-        .select("*")
-        .eq("id", id)
-        .single()
+})
 
-      if(error){
-        alert("Erro ao buscar registro: " + error.message)
-        return
-      }
-
-      entrarModoEdicao(registro)
-    })
-  })
-
-  lista.querySelectorAll('button[data-acao="excluir"]').forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const id = btn.getAttribute("data-id")
-
-      const confirmar = confirm("Deseja realmente excluir esta reação transfusional?")
-      if(!confirmar) return
-
-      const { error } = await supabase
-        .from("reacoes_transfusionais")
-        .delete()
-        .eq("id", id)
-
-      if(error){
-        alert("Erro ao excluir: " + error.message)
-        return
-      }
-
-      alert("Reação excluída com sucesso")
-      if(editandoId && String(editandoId) === String(id)){
-        sairModoEdicao()
-      }
-      carregar()
-    })
-  })
 }
 
-document.getElementById("btnSalvar").addEventListener("click", async () => {
-  const agencia = document.getElementById("agencia").value
-  const paciente = document.getElementById("paciente").value.trim()
-  const prontuario = document.getElementById("prontuario").value.trim()
-  const data_reacao = document.getElementById("data_reacao").value
-  const tipo_reacao = document.getElementById("tipo_reacao").value
-  const classificacao = document.getElementById("classificacao").value
-  const conduta = document.getElementById("conduta").value.trim()
-  const desfecho = document.getElementById("desfecho").value.trim()
-  const observacoes = document.getElementById("observacoes").value.trim()
+window.editar=async(id)=>{
 
-  if(!agencia){
-    alert("Selecione a Agência.")
-    return
-  }
+const {data}=await supabase
+.from("reacoes_transfusionais")
+.select("*")
+.eq("id",id)
+.single()
 
-  if(!paciente){
-    alert("Preencha o campo Paciente.")
-    return
-  }
+editandoId=id
 
-  if(!data_reacao){
-    alert("Preencha o campo Data da reação.")
-    return
-  }
+document.getElementById("paciente").value=data.paciente
+document.getElementById("prontuario").value=data.prontuario
+document.getElementById("data").value=data.data_reacao
+document.getElementById("tipo").value=data.tipo_reacao
+document.getElementById("classificacao").value=data.classificacao
+document.getElementById("conduta").value=data.conduta
+document.getElementById("desfecho").value=data.desfecho
+document.getElementById("obs").value=data.observacoes
 
-  if(!tipo_reacao){
-    alert("Selecione o Tipo de reação.")
-    return
-  }
+document.getElementById("infoEdicao").style.display="block"
+document.getElementById("btnCancelar").style.display="inline-block"
 
-  const payload = {
-    agencia,
-    paciente,
-    prontuario,
-    data_reacao,
-    tipo_reacao,
-    classificacao,
-    conduta,
-    desfecho,
-    observacoes
-  }
+}
 
-  if(editandoId){
-    const { error } = await supabase
-      .from("reacoes_transfusionais")
-      .update(payload)
-      .eq("id", editandoId)
+window.excluir=async(id)=>{
 
-    if(error){
-      alert("Erro ao atualizar: " + error.message)
-      return
-    }
+if(!confirm("Excluir reação?")) return
 
-    alert("Reação atualizada com sucesso")
-    sairModoEdicao()
-    carregar()
-    return
-  }
-
-  const { error } = await supabase
-    .from("reacoes_transfusionais")
-    .insert([payload])
-
-  if(error){
-    alert("Erro ao salvar: " + error.message)
-    return
-  }
-
-  alert("Reação registrada com sucesso")
-  limparFormulario()
-  carregar()
-})
-
-document.getElementById("btnCancelar").addEventListener("click", () => {
-  sairModoEdicao()
-})
+await supabase
+.from("reacoes_transfusionais")
+.delete()
+.eq("id",id)
 
 carregar()
+
+}
+
+document.getElementById("btnCancelar").onclick=()=>{
+
+editandoId=null
+
+document.getElementById("infoEdicao").style.display="none"
+document.getElementById("btnCancelar").style.display="none"
+
+}
+
+document.getElementById("btnSalvar").onclick=async()=>{
+
+const paciente=document.getElementById("paciente").value
+const prontuario=document.getElementById("prontuario").value
+const data=document.getElementById("data").value
+const tipo=document.getElementById("tipo").value
+const classificacao=document.getElementById("classificacao").value
+const conduta=document.getElementById("conduta").value
+const desfecho=document.getElementById("desfecho").value
+const obs=document.getElementById("obs").value
+
+const payload={
+agencia:agenciaUsuario,
+paciente,
+prontuario,
+data_reacao:data,
+tipo_reacao:tipo,
+classificacao,
+conduta,
+desfecho,
+observacoes:obs
+}
+
+if(editandoId){
+
+await supabase
+.from("reacoes_transfusionais")
+.update(payload)
+.eq("id",editandoId)
+
+editandoId=null
+
+}else{
+
+await supabase
+.from("reacoes_transfusionais")
+.insert([payload])
+
+}
+
+carregar()
+
+}
+
+await carregarUsuario()
+carregar()
+
 </script>
 
 </body>
