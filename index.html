@@ -1,106 +1,119 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HemoGestor</title>
+
+<title>Login - HemoGestor</title>
 
 <style>
+
 body{
-font-family:Arial,sans-serif;
-background:#f5f5f5;
+font-family:Arial;
+background:#f4f4f4;
 display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
 margin:0;
 }
-.login-box{
+
+.card{
 background:white;
-padding:40px;
-border-radius:12px;
-width:360px;
-text-align:center;
-box-shadow:0 0 15px rgba(0,0,0,0.1);
+padding:30px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+width:350px;
 }
-h1{
-color:#b30000;
-margin-bottom:30px;
+
+h2{
+margin-top:0;
 }
+
 input{
 width:100%;
-padding:12px;
-margin-bottom:15px;
+padding:10px;
+margin-bottom:10px;
 border-radius:6px;
 border:1px solid #ccc;
-font-size:15px;
-box-sizing:border-box;
 }
+
 button{
 width:100%;
 padding:12px;
-background:#c40000;
+background:#b30000;
 color:white;
 border:none;
 border-radius:6px;
-font-size:16px;
 cursor:pointer;
 }
-#msg{
-margin-top:15px;
-color:#b30000;
-min-height:20px;
-}
+
 </style>
+
 </head>
+
 <body>
 
-<div class="login-box">
-  <h1>HemoGestor</h1>
-  <input id="email" type="email" placeholder="Email">
-  <input id="senha" type="password" placeholder="Senha">
-  <button id="btnLogin">Entrar</button>
-  <div id="msg"></div>
+<div class="card">
+
+<h2>HemoGestor</h2>
+
+<input id="email" placeholder="Email">
+
+<input id="senha" type="password" placeholder="Senha">
+
+<button onclick="login()">Entrar</button>
+
 </div>
 
 <script type="module">
+
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
-const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
-const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
+const supabaseUrl="https://awtszrqsnsgncdrlzizy.supabase.co"
+const supabaseKey="sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
 
-const client = createClient(supabaseUrl, supabaseKey)
+const supabase=createClient(supabaseUrl,supabaseKey)
 
-document.getElementById("btnLogin").addEventListener("click", async () => {
-  const email = document.getElementById("email").value.trim()
-  const senha = document.getElementById("senha").value.trim()
-  const msg = document.getElementById("msg")
+window.login=async()=>{
 
-  msg.style.color = "#b30000"
-  msg.innerText = ""
+const email=document.getElementById("email").value
+const senha=document.getElementById("senha").value
 
-  try {
-    const { error } = await client.auth.signInWithPassword({
-      email,
-      password: senha
-    })
-
-    if (error) {
-      msg.innerText = error.message
-      return
-    }
-
-    msg.style.color = "green"
-    msg.innerText = "Login realizado com sucesso"
-
-    setTimeout(() => {
-      window.location.href = "dashboard.html"
-    }, 1000)
-  } catch (e) {
-    msg.innerText = "Erro de conexão com Supabase"
-  }
+const {error}=await supabase.auth.signInWithPassword({
+email,
+password:senha
 })
+
+if(error){
+
+alert("Login inválido")
+return
+
+}
+
+const {data}=await supabase
+.from("usuarios")
+.select("*")
+.eq("email",email)
+.single()
+
+if(data.primeiro_login){
+
+window.location="trocar-senha.html"
+
+}else{
+
+window.location="dashboard.html"
+
+}
+
+}
+
 </script>
 
 </body>
+
 </html>
