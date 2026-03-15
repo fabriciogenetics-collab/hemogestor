@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Agências</title>
+<title>Gestão de Agências</title>
 
 <style>
 
@@ -57,9 +57,18 @@ button{
 background:#c40000;
 color:white;
 border:none;
-padding:12px;
+padding:10px 15px;
 border-radius:6px;
 cursor:pointer;
+margin-right:5px;
+}
+
+button.excluir{
+background:#8b0000;
+}
+
+button.editar{
+background:#ff9800;
 }
 
 table{
@@ -81,7 +90,7 @@ text-align:left;
 <body>
 
 <div class="topo">
-Agências
+Gestão de Agências
 <a href="dashboard.html">Voltar</a>
 </div>
 
@@ -89,11 +98,13 @@ Agências
 
 <div class="card">
 
-<h3>Criar nova agência</h3>
+<h3>Criar / Editar agência</h3>
 
 <input id="nome" placeholder="Nome da agência">
 
-<button onclick="criar()">Criar agência</button>
+<input id="gestor" placeholder="Nome do gestor responsável">
+
+<button onclick="salvar()">Salvar</button>
 
 </div>
 
@@ -106,6 +117,8 @@ Agências
 <thead>
 <tr>
 <th>Nome</th>
+<th>Gestor</th>
+<th>Ações</th>
 </tr>
 </thead>
 
@@ -126,13 +139,66 @@ const supabaseKey="sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
 
 const supabase=createClient(supabaseUrl,supabaseKey)
 
-window.criar=async()=>{
+let editandoId=null
+
+window.salvar=async()=>{
 
 const nome=document.getElementById("nome").value
+const gestor=document.getElementById("gestor").value
+
+if(editandoId){
 
 await supabase
 .from("agencias")
-.insert([{nome_agencia:nome}])
+.update({
+nome_agencia:nome,
+gestor
+})
+.eq("id",editandoId)
+
+editandoId=null
+
+}else{
+
+await supabase
+.from("agencias")
+.insert([{
+nome_agencia:nome,
+gestor
+}])
+
+}
+
+document.getElementById("nome").value=""
+document.getElementById("gestor").value=""
+
+carregar()
+
+}
+
+window.editar=async(id)=>{
+
+const {data}=await supabase
+.from("agencias")
+.select("*")
+.eq("id",id)
+.single()
+
+document.getElementById("nome").value=data.nome_agencia
+document.getElementById("gestor").value=data.gestor
+
+editandoId=id
+
+}
+
+window.excluir=async(id)=>{
+
+if(!confirm("Deseja excluir esta agência?")) return
+
+await supabase
+.from("agencias")
+.delete()
+.eq("id",id)
 
 carregar()
 
@@ -152,7 +218,23 @@ data.forEach(a=>{
 
 lista.innerHTML+=`
 <tr>
+
 <td>${a.nome_agencia}</td>
+
+<td>${a.gestor || "-"}</td>
+
+<td>
+
+<button class="editar" onclick="editar('${a.id}')">
+Editar
+</button>
+
+<button class="excluir" onclick="excluir('${a.id}')">
+Excluir
+</button>
+
+</td>
+
 </tr>
 `
 
