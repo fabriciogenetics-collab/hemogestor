@@ -42,6 +42,7 @@ padding:30px;
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
 gap:20px;
+margin-bottom:30px;
 }
 
 .card{
@@ -57,6 +58,12 @@ font-size:40px;
 font-weight:bold;
 color:#b30000;
 margin-top:10px;
+}
+
+.analise{
+text-align:left;
+line-height:1.6;
+font-size:16px;
 }
 
 </style>
@@ -106,6 +113,18 @@ Indicadores Hemoterápicos
 
 </div>
 
+<div class="card analise">
+
+<h3>Análise automática dos indicadores</h3>
+
+<p id="analiseIndicadores">
+
+Carregando análise...
+
+</p>
+
+</div>
+
 </div>
 
 <script type="module">
@@ -149,6 +168,34 @@ document.getElementById("ch").innerText = ch
 document.getElementById("plaq").innerText = plaq
 document.getElementById("plasma").innerText = plasma
 
+let texto = ""
+
+texto += "No período analisado foram registradas " + totalTransfusoes + " transfusões. "
+
+texto += "Foram identificadas " + totalReacoes + " reações transfusionais, "
+
+texto += "representando taxa de " + taxa + "%. "
+
+if(ch > plaq && ch > plasma){
+
+texto += "A maior parte das transfusões foi de concentrado de hemácias."
+
+}
+
+if(plaq > ch && plaq > plasma){
+
+texto += "A maior parte das transfusões foi de plaquetas."
+
+}
+
+if(plasma > ch && plasma > plaq){
+
+texto += "A maior parte das transfusões foi de plasma."
+
+}
+
+document.getElementById("analiseIndicadores").innerText = texto
+
 }
 
 carregarIndicadores()
@@ -156,4 +203,5 @@ carregarIndicadores()
 </script>
 
 </body>
+
 </html>
