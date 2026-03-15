@@ -2,14 +2,11 @@
 <html lang="pt-BR">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Usuários</title>
 
 <style>
-
 body{
 font-family:Arial;
 margin:0;
@@ -51,6 +48,7 @@ padding:10px;
 margin-bottom:10px;
 border-radius:6px;
 border:1px solid #ccc;
+box-sizing:border-box;
 }
 
 button{
@@ -74,6 +72,15 @@ padding:10px;
 text-align:left;
 }
 
+.bloqueado{
+max-width:700px;
+margin:40px auto;
+background:white;
+padding:30px;
+border-radius:12px;
+box-shadow:0 0 10px rgba(0,0,0,0.08);
+text-align:center;
+}
 </style>
 
 </head>
@@ -85,7 +92,7 @@ Usuários
 <a href="dashboard.html">Voltar</a>
 </div>
 
-<div class="container">
+<div class="container" id="conteudo" style="display:none;">
 
 <div class="card">
 
@@ -133,14 +140,44 @@ Usuários
 
 </div>
 
-<script type="module">
+<div id="bloqueado" class="bloqueado" style="display:none;">
+<h2>Acesso restrito</h2>
+<p>Somente administradores podem acessar esta página.</p>
+</div>
 
+<script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const supabaseUrl="https://awtszrqsnsgncdrlzizy.supabase.co"
 const supabaseKey="sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
 
 const supabase=createClient(supabaseUrl,supabaseKey)
+
+async function validarADM(){
+
+const { data: sessao } = await supabase.auth.getSession()
+
+if(!sessao.session){
+window.location.href="/"
+return false
+}
+
+const email=sessao.session.user.email
+
+const { data: usuario } = await supabase
+.from("usuarios")
+.select("*")
+.eq("email",email)
+.single()
+
+if(!usuario || usuario.perfil!=="ADM"){
+document.getElementById("bloqueado").style.display="block"
+return false
+}
+
+document.getElementById("conteudo").style.display="block"
+return true
+}
 
 window.criar=async()=>{
 
@@ -164,7 +201,6 @@ const {data}=await supabase
 .select("*")
 
 const lista=document.getElementById("lista")
-
 lista.innerHTML=""
 
 data.forEach(u=>{
@@ -182,10 +218,11 @@ lista.innerHTML+=`
 
 }
 
+const ok=await validarADM()
+if(ok){
 carregar()
-
+}
 </script>
 
 </body>
-
 </html>
