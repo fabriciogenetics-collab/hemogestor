@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configurações do Sistema</title>
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  margin:0;
+  background:#f4f4f4;
+}
+.topo{
+  background:#b30000;
+  color:white;
+  padding:20px;
+  font-size:22px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.topo a{
+  color:white;
+  text-decoration:none;
+  background:#d91c1c;
+  padding:10px 15px;
+  border-radius:6px;
+}
+.container{
+  padding:30px;
+}
+.card{
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 0 10px rgba(0,0,0,0.08);
+  margin-bottom:25px;
+}
+button{
+  background:#b30000;
+  color:white;
+  border:none;
+  padding:12px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:15px;
+}
+input[type="file"]{
+  display:block;
+  margin:15px 0;
+}
+.preview-box{
+  margin-top:20px;
+  padding:20px;
+  background:#fafafa;
+  border:1px solid #eee;
+  border-radius:10px;
+}
+.preview-box img{
+  max-width:320px;
+  width:100%;
+  height:auto;
+  display:block;
+}
+.mensagem{
+  margin-top:15px;
+  font-weight:bold;
+  color:#b30000;
+}
+.bloqueado{
+  max-width:700px;
+  margin:40px auto;
+  background:white;
+  padding:30px;
+  border-radius:12px;
+  box-shadow:0 0 10px rgba(0,0,0,0.08);
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topo">
+  Configurações do Sistema
+  <a href="dashboard.html">Voltar</a>
+</div>
+
+<div class="container" id="conteudo" style="display:none;">
+
+  <div class="card">
+    <h3>Logo do sistema</h3>
+    <p>Envie a logo principal que será exibida na tela de login.</p>
+
+    <input type="file" id="arquivoLogo" accept="image/png,image/jpeg,image/webp">
+
+    <button id="btnEnviar">Enviar logo</button>
+
+    <div class="mensagem" id="mensagem"></div>
+
+    <div class="preview-box">
+      <h4>Pré-visualização atual</h4>
+      <img id="previewLogo" src="" alt="Logo do sistema">
+    </div>
+  </div>
+
+</div>
+
+<div id="bloqueado" class="bloqueado" style="display:none;">
+  <h2>Acesso restrito</h2>
+  <p>Somente administradores podem acessar esta página.</p>
+</div>
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+
+const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
+const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
+
+const supabase = createClient(supabaseUrl, supabaseKey)
+
+const bucket = "logos"
+const arquivoPadrao = "logo-principal.png"
+const logoPublica = `${supabaseUrl}/storage/v1/object/public/${bucket}/${arquivoPadrao}`
+
+async function validarADM(){
+  const { data: sessao } = await supabase.auth.getSession()
+
+  if(!sessao.session){
+    window.location.href = "/"
+    return false
+  }
+
+  const email = sessao.session.user.email
+
+  const { data: usuario } = await supabase
+    .from("usuarios")
+    .select("*")
+    .eq("email", email)
+    .single()
+
+  if(!usuario || usuario.perfil !== "ADM"){
+    document.getElementById("bloqueado").style.display = "block"
+    return false
+  }
+
+  document.getElementById("conteudo").style.display = "block"
+  return true
+}
+
+function carregarPreview(){
+  const img = document.getElementById("previewLogo")
+  img.src = `${logoPublica}?t=${Date.now()}`
+  img.onerror = () => {
+    img.src = "logo-gsh.png"
+  }
+}
+
+document.getElementById("btnEnviar").addEventListener("click", async () => {
+  const input = document.getElementById("arquivoLogo")
+  const mensagem = document.getElementById("mensagem")
+
+  mensagem.innerText = ""
+
+  if(!input.files || !input.files[0]){
+    mensagem.innerText = "Selecione uma imagem."
+    return
+  }
+
+  const arquivo = input.files[0]
+
+  const { error } = await supabase.storage
+    .from(bucket)
+    .upload(arquivoPadrao, arquivo, {
+      upsert: true,
+      cacheControl: "0"
+    })
+
+  if(error){
+    mensagem.innerText = "Erro ao enviar logo: " + error.message
+    return
+  }
+
+  mensagem.innerText = "Logo atualizada com sucesso."
+  carregarPreview()
+  input.value = ""
+})
+
+const ok = await validarADM()
+if(ok){
+  carregarPreview()
+}
+</script>
+
+</body>
+</html>
