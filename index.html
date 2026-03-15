@@ -1,119 +1,135 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HemoGestor</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    .login-box {
-      background: white;
-      padding: 40px;
-      border-radius: 12px;
-      width: 360px;
-      text-align: center;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
+<title>HemoGestor</title>
 
-    h1 {
-      color: #b30000;
-      margin-bottom: 30px;
-      font-size: 28px;
-    }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 15px;
-      box-sizing: border-box;
-    }
+<style>
 
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #c40000;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+body{
+font-family: Arial;
+background:#f5f5f5;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
 
-    button:hover {
-      background: #a00000;
-    }
+.login-box{
+background:white;
+padding:40px;
+border-radius:12px;
+width:360px;
+text-align:center;
+box-shadow:0 0 15px rgba(0,0,0,0.1);
+}
 
-    #msg {
-      margin-top: 16px;
-      color: #b30000;
-      min-height: 20px;
-    }
-  </style>
+h1{
+color:#b30000;
+margin-bottom:30px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border-radius:6px;
+border:1px solid #ccc;
+font-size:15px;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#c40000;
+color:white;
+border:none;
+border-radius:6px;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#a00000;
+}
+
+#msg{
+margin-top:15px;
+color:#b30000;
+min-height:20px;
+}
+
+</style>
+
 </head>
+
 <body>
-  <div class="login-box">
-    <h1>HemoGestor</h1>
 
-    <input id="email" type="email" placeholder="Email" />
-    <input id="senha" type="password" placeholder="Senha" />
+<div class="login-box">
 
-    <button id="btnLogin">Entrar</button>
+<h1>HemoGestor</h1>
 
-    <div id="msg"></div>
-  </div>
+<input id="email" type="email" placeholder="Email">
 
-  <script>
-    const supabaseUrl = "https://awtszrqsnsngcdrlzizy.supabase.co";
-    const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb";
+<input id="senha" type="password" placeholder="Senha">
 
-    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+<button onclick="login()">Entrar</button>
 
-    document.getElementById("btnLogin").addEventListener("click", async function () {
-      const email = document.getElementById("email").value.trim();
-      const senha = document.getElementById("senha").value.trim();
-      const msg = document.getElementById("msg");
+<div id="msg"></div>
 
-      msg.innerText = "";
+</div>
 
-      if (!email || !senha) {
-        msg.innerText = "Preencha email e senha.";
-        return;
-      }
+<script>
 
-      try {
-        const { data, error } = await client.auth.signInWithPassword({
-          email: email,
-          password: senha
-        });
+const supabaseUrl = "https://awtszrqsnsngcdrlzizy.supabase.co"
+const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
 
-        if (error) {
-          msg.innerText = error.message;
-          return;
-        }
+const client = window.supabase.createClient(supabaseUrl, supabaseKey)
 
-        msg.style.color = "green";
-        msg.innerText = "Login realizado com sucesso";
+async function login(){
 
-        setTimeout(() => {
-          window.location.href = "dashboard.html";
-        }, 1000);
-      } catch (e) {
-        msg.innerText = "Erro de conexão com o Supabase.";
-      }
-    });
-  </script>
+const email = document.getElementById("email").value
+const senha = document.getElementById("senha").value
+const msg = document.getElementById("msg")
+
+msg.innerText=""
+
+try{
+
+const { data, error } = await client.auth.signInWithPassword({
+email: email,
+password: senha
+})
+
+if(error){
+msg.innerText = error.message
+return
+}
+
+msg.style.color="green"
+msg.innerText="Login realizado com sucesso"
+
+setTimeout(()=>{
+window.location.href="dashboard.html"
+},1000)
+
+}
+
+catch(e){
+
+msg.innerText="Erro de conexão com Supabase"
+
+}
+
+}
+
+</script>
+
 </body>
 </html>
