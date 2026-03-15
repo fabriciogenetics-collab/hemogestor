@@ -28,7 +28,7 @@
       width:100%;
       max-width:1120px;
       display:grid;
-      grid-template-columns: 1.15fr 0.95fr;
+      grid-template-columns:1.15fr 0.95fr;
       background:rgba(255,255,255,0.97);
       border-radius:24px;
       overflow:hidden;
@@ -72,23 +72,34 @@
     }
 
     .logo-box{
-      display:inline-flex;
+      display:flex;
       align-items:center;
       justify-content:center;
       width:100%;
       max-width:360px;
+      min-height:140px;
       padding:18px;
       background:rgba(255,255,255,0.96);
       border-radius:22px;
       box-shadow:0 12px 28px rgba(0,0,0,0.16);
       margin-bottom:32px;
       z-index:1;
+      overflow:hidden;
     }
 
     .logo-box img{
       width:100%;
+      max-width:300px;
       height:auto;
       display:block;
+    }
+
+    .logo-fallback{
+      font-size:40px;
+      font-weight:700;
+      color:#b30000;
+      display:none;
+      text-align:center;
     }
 
     .titulo-sistema{
@@ -312,10 +323,10 @@
 
 <body>
   <div class="wrapper">
-
     <section class="painel-esquerdo">
       <div class="logo-box">
-        <img id="logoSistema" src="logo-gsh.png" alt="Logo do sistema">
+        <img id="logoSistema" alt="Logo do sistema">
+        <div id="logoFallback" class="logo-fallback">GSH</div>
       </div>
 
       <h1 class="titulo-sistema">HemoGestor</h1>
@@ -378,7 +389,6 @@
         </div>
       </div>
     </section>
-
   </div>
 
   <script type="module">
@@ -386,17 +396,35 @@
 
     const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
     const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
-
     const supabase = createClient(supabaseUrl, supabaseKey)
 
     const logoStorageUrl = `${supabaseUrl}/storage/v1/object/public/logos/logo-principal.png`
+    const logoLocalUrl = "logo-gsh.png"
 
-    function carregarLogo(){
+    async function carregarLogo(){
       const img = document.getElementById("logoSistema")
-      img.src = `${logoStorageUrl}?t=${Date.now()}`
+      const fallback = document.getElementById("logoFallback")
+
+      img.onerror = null
+
+      try{
+        const response = await fetch(`${logoStorageUrl}?t=${Date.now()}`, { method: "HEAD" })
+
+        if(response.ok){
+          img.src = `${logoStorageUrl}?t=${Date.now()}`
+          img.style.display = "block"
+          fallback.style.display = "none"
+          return
+        }
+      }catch(e){}
+
       img.onerror = () => {
-        img.src = "logo-gsh.png"
+        img.style.display = "none"
+        fallback.style.display = "block"
       }
+
+      img.src = logoLocalUrl
+      img.style.display = "block"
     }
 
     window.login = async () => {
