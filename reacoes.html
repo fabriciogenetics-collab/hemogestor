@@ -132,6 +132,13 @@ th{
       Você está editando uma reação transfusional.
     </div>
 
+    <label>Agência *</label>
+    <select id="agencia">
+      <option value="">Selecione</option>
+      <option>Guarulhos</option>
+      <option>IBCC</option>
+    </select>
+
     <label>Paciente *</label>
     <input id="paciente" placeholder="Nome ou identificação do paciente">
 
@@ -182,6 +189,7 @@ th{
       <thead>
         <tr>
           <th>Data</th>
+          <th>Agência</th>
           <th>Paciente</th>
           <th>Tipo</th>
           <th>Classificação</th>
@@ -205,6 +213,7 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 let editandoId = null
 
 function limparFormulario(){
+  document.getElementById("agencia").value = ""
   document.getElementById("paciente").value = ""
   document.getElementById("prontuario").value = ""
   document.getElementById("data_reacao").value = ""
@@ -218,6 +227,7 @@ function limparFormulario(){
 function entrarModoEdicao(registro){
   editandoId = registro.id
 
+  document.getElementById("agencia").value = registro.agencia || ""
   document.getElementById("paciente").value = registro.paciente || ""
   document.getElementById("prontuario").value = registro.prontuario || ""
   document.getElementById("data_reacao").value = registro.data_reacao || ""
@@ -252,12 +262,12 @@ async function carregar(){
   lista.innerHTML = ""
 
   if(error){
-    lista.innerHTML = `<tr><td colspan="5">Erro ao carregar registros: ${error.message}</td></tr>`
+    lista.innerHTML = `<tr><td colspan="6">Erro ao carregar registros: ${error.message}</td></tr>`
     return
   }
 
   if(!data || data.length === 0){
-    lista.innerHTML = `<tr><td colspan="5">Nenhuma reação registrada.</td></tr>`
+    lista.innerHTML = `<tr><td colspan="6">Nenhuma reação registrada.</td></tr>`
     return
   }
 
@@ -266,6 +276,7 @@ async function carregar(){
 
     tr.innerHTML = `
       <td>${r.data_reacao ?? ""}</td>
+      <td>${r.agencia ?? ""}</td>
       <td>${r.paciente ?? ""}</td>
       <td>${r.tipo_reacao ?? ""}</td>
       <td>${r.classificacao ?? ""}</td>
@@ -323,6 +334,7 @@ async function carregar(){
 }
 
 document.getElementById("btnSalvar").addEventListener("click", async () => {
+  const agencia = document.getElementById("agencia").value
   const paciente = document.getElementById("paciente").value.trim()
   const prontuario = document.getElementById("prontuario").value.trim()
   const data_reacao = document.getElementById("data_reacao").value
@@ -331,6 +343,11 @@ document.getElementById("btnSalvar").addEventListener("click", async () => {
   const conduta = document.getElementById("conduta").value.trim()
   const desfecho = document.getElementById("desfecho").value.trim()
   const observacoes = document.getElementById("observacoes").value.trim()
+
+  if(!agencia){
+    alert("Selecione a Agência.")
+    return
+  }
 
   if(!paciente){
     alert("Preencha o campo Paciente.")
@@ -348,6 +365,7 @@ document.getElementById("btnSalvar").addEventListener("click", async () => {
   }
 
   const payload = {
+    agencia,
     paciente,
     prontuario,
     data_reacao,
