@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Acompanhamento Transfusional</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f4f4f4;
+}
+
+.topo{
+background:#b30000;
+color:white;
+padding:18px;
+font-size:20px;
+font-weight:bold;
+}
+
+.container{
+padding:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+input{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+width:100%;
+background:#c40000;
+color:white;
+border:none;
+padding:12px;
+border-radius:6px;
+font-size:16px;
+margin-top:10px;
+}
+
+h3{
+margin-top:0;
+}
+
+.alerta{
+background:#fff3cd;
+border:1px solid #ffeeba;
+padding:10px;
+border-radius:6px;
+margin-bottom:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="topo">
+Acompanhamento Transfusional
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h3>Identificação</h3>
+
+<input id="paciente" placeholder="Paciente">
+
+<input id="bolsa" placeholder="Número da bolsa">
+
+<input id="enfermeiro" placeholder="Nome do enfermeiro">
+
+<input id="coren" placeholder="COREN">
+
+<button onclick="registrarInicio()">Registrar início</button>
+
+</div>
+
+<div class="card">
+
+<h3>Sinais iniciais</h3>
+
+<input id="pa_i" placeholder="PA">
+
+<input id="fc_i" placeholder="FC">
+
+<input id="fr_i" placeholder="FR">
+
+<input id="sat_i" placeholder="Saturação">
+
+<input id="temp_i" placeholder="Temperatura">
+
+<button onclick="salvarInicial()">Salvar sinais iniciais</button>
+
+</div>
+
+<div class="card">
+
+<h3>Sinais 10 minutos</h3>
+
+<input id="pa_10" placeholder="PA">
+
+<input id="fc_10" placeholder="FC">
+
+<input id="fr_10" placeholder="FR">
+
+<input id="sat_10" placeholder="Saturação">
+
+<button onclick="salvar10()">Salvar 10 minutos</button>
+
+</div>
+
+<div class="card">
+
+<h3>Sinais 1h30</h3>
+
+<input id="pa_1h" placeholder="PA">
+
+<input id="fc_1h" placeholder="FC">
+
+<input id="fr_1h" placeholder="FR">
+
+<input id="sat_1h" placeholder="Saturação">
+
+<button onclick="salvar1h()">Salvar 1h30</button>
+
+</div>
+
+<div class="card">
+
+<h3>Término</h3>
+
+<input id="pa_f" placeholder="PA">
+
+<input id="fc_f" placeholder="FC">
+
+<input id="fr_f" placeholder="FR">
+
+<input id="sat_f" placeholder="Saturação">
+
+<button onclick="finalizar()">Finalizar transfusão</button>
+
+</div>
+
+<div id="alerta"></div>
+
+</div>
+
+<script type="module">
+
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+
+const supabaseUrl="https://awtszrqsnsgncdrlzizy.supabase.co"
+const supabaseKey="sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
+
+const supabase=createClient(supabaseUrl,supabaseKey)
+
+let idRegistro=null
+let inicio=null
+let agenciaUsuario=""
+
+async function carregarUsuario(){
+
+const {data}=await supabase.auth.getSession()
+
+const email=data.session.user.email
+
+const {data:usuario}=await supabase
+.from("usuarios")
+.select("*")
+.eq("email",email)
+.single()
+
+agenciaUsuario=usuario.agencia
+
+}
+
+window.registrarInicio=async()=>{
+
+inicio=new Date()
+
+const paciente=document.getElementById("paciente").value
+const bolsa=document.getElementById("bolsa").value
+const enfermeiro=document.getElementById("enfermeiro").value
+const coren=document.getElementById("coren").value
+
+const {data}=await supabase
+.from("acompanhamento_transfusional")
+.insert([{
+agencia:agenciaUsuario,
+paciente,
+bolsa,
+enfermeiro,
+coren,
+inicio
+}])
+.select()
+
+idRegistro=data[0].id
+
+alert("Início registrado")
+
+}
+
+window.salvarInicial=async()=>{
+
+await supabase
+.from("acompanhamento_transfusional")
+.update({
+pa_inicial:document.getElementById("pa_i").value,
+fc_inicial:document.getElementById("fc_i").value,
+fr_inicial:document.getElementById("fr_i").value,
+sat_inicial:document.getElementById("sat_i").value,
+temp_inicial:document.getElementById("temp_i").value
+})
+.eq("id",idRegistro)
+
+alert("Sinais iniciais salvos")
+
+}
+
+window.salvar10=async()=>{
+
+await supabase
+.from("acompanhamento_transfusional")
+.update({
+pa_10:document.getElementById("pa_10").value,
+fc_10:document.getElementById("fc_10").value,
+fr_10:document.getElementById("fr_10").value,
+sat_10:document.getElementById("sat_10").value
+})
+.eq("id",idRegistro)
+
+alert("Sinais 10 min salvos")
+
+}
+
+window.salvar1h=async()=>{
+
+await supabase
+.from("acompanhamento_transfusional")
+.update({
+pa_1h:document.getElementById("pa_1h").value,
+fc_1h:document.getElementById("fc_1h").value,
+fr_1h:document.getElementById("fr_1h").value,
+sat_1h:document.getElementById("sat_1h").value
+})
+.eq("id",idRegistro)
+
+alert("Sinais 1h30 salvos")
+
+}
+
+window.finalizar=async()=>{
+
+const termino=new Date()
+
+const diff=(termino-inicio)/1000/60/60
+
+if(diff>4){
+
+document.getElementById("alerta").innerHTML=`
+<div class="alerta">
+⚠️ Transfusão ultrapassou 4 horas
+</div>
+`
+
+}
+
+await supabase
+.from("acompanhamento_transfusional")
+.update({
+pa_final:document.getElementById("pa_f").value,
+fc_final:document.getElementById("fc_f").value,
+fr_final:document.getElementById("fr_f").value,
+sat_final:document.getElementById("sat_f").value,
+termino
+})
+.eq("id",idRegistro)
+
+alert("Transfusão finalizada")
+
+}
+
+await carregarUsuario()
+
+</script>
+
+</body>
+
+</html>
