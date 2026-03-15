@@ -1,225 +1,11 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Gestão de Usuários</title>
-
-<style>
-
-body{
-font-family:Arial;
-margin:0;
-background:#f4f4f4;
-}
-
-.topo{
-background:#b30000;
-color:white;
-padding:20px;
-font-size:22px;
-display:flex;
-justify-content:space-between;
-}
-
-.topo a{
-color:white;
-text-decoration:none;
-background:#d91c1c;
-padding:10px 15px;
-border-radius:6px;
-}
-
-.container{
-padding:30px;
-}
-
-.card{
-background:white;
-padding:25px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
-margin-bottom:30px;
-}
-
-input,select{
-width:100%;
-padding:10px;
-margin-bottom:10px;
-border-radius:6px;
-border:1px solid #ccc;
-}
-
-button{
-background:#c40000;
-color:white;
-border:none;
-padding:10px 15px;
-border-radius:6px;
-cursor:pointer;
-margin-right:5px;
-}
-
-button.excluir{
-background:#8b0000;
-}
-
-button.editar{
-background:#ff9800;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:15px;
-}
-
-th,td{
-border-bottom:1px solid #ddd;
-padding:10px;
-text-align:left;
-}
-
-.bloqueado{
-max-width:700px;
-margin:40px auto;
-background:white;
-padding:30px;
-border-radius:12px;
-box-shadow:0 0 10px rgba(0,0,0,0.08);
-text-align:center;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="topo">
-Gestão de Usuários
-<a href="dashboard.html">Voltar</a>
-</div>
-
-<div class="container" id="conteudo" style="display:none;">
-
-<div class="card">
-
-<h3>Criar / Editar usuário</h3>
-
-<input id="nome" placeholder="Nome">
-
-<input id="email" placeholder="Email">
-
-<select id="perfil">
-<option>ADM</option>
-<option>Gestor</option>
-<option>Colaborador</option>
-</select>
-
-<select id="agencia"></select>
-
-<button onclick="salvar()">Salvar usuário</button>
-
-</div>
-
-<div class="card">
-
-<h3>Usuários cadastrados</h3>
-
-<table>
-
-<thead>
-<tr>
-<th>Nome</th>
-<th>Email</th>
-<th>Perfil</th>
-<th>Agência</th>
-<th>Ações</th>
-</tr>
-</thead>
-
-<tbody id="lista"></tbody>
-
-</table>
-
-</div>
-
-</div>
-
-<div id="bloqueado" class="bloqueado" style="display:none;">
-<h2>Acesso restrito</h2>
-<p>Somente administradores podem acessar esta página.</p>
-</div>
-
-<script type="module">
-
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
-
-const supabaseUrl="https://awtszrqsnsgncdrlzizy.supabase.co"
-const supabaseKey="sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
-
-const supabase=createClient(supabaseUrl,supabaseKey)
-
-let editandoId=null
-
-async function validarADM(){
-
-const { data: sessao } = await supabase.auth.getSession()
-
-if(!sessao.session){
-window.location.href="/"
-return false
-}
-
-const email=sessao.session.user.email
-
-const { data: usuario } = await supabase
-.from("usuarios")
-.select("*")
-.eq("email",email)
-.single()
-
-if(!usuario || usuario.perfil!=="ADM"){
-document.getElementById("bloqueado").style.display="block"
-return false
-}
-
-document.getElementById("conteudo").style.display="block"
-return true
-
-}
-
-async function carregarAgencias(){
-
-const {data}=await supabase
-.from("agencias")
-.select("*")
-
-const select=document.getElementById("agencia")
-
-select.innerHTML=""
-
-data.forEach(a=>{
-
-select.innerHTML+=`
-<option value="${a.nome_agencia}">
-${a.nome_agencia}
-</option>
-`
-
-})
-
-}
-
 window.salvar=async()=>{
 
 const nome=document.getElementById("nome").value
 const email=document.getElementById("email").value
 const perfil=document.getElementById("perfil").value
 const agencia=document.getElementById("agencia").value
+
+let senha = Math.random().toString(36).slice(-8)
 
 if(editandoId){
 
@@ -235,11 +21,25 @@ agencia
 
 editandoId=null
 
+alert("Usuário atualizado")
+
 }else{
+
+const {data,error}=await supabase.auth.signUp({
+email:email,
+password:senha
+})
+
+if(error){
+alert("Erro ao criar login: "+error.message)
+return
+}
 
 await supabase
 .from("usuarios")
 .insert([{nome,email,perfil,agencia}])
+
+alert("Usuário criado!\nSenha temporária: "+senha)
 
 }
 
@@ -249,89 +49,3 @@ document.getElementById("email").value=""
 carregar()
 
 }
-
-window.editar=async(id)=>{
-
-const {data}=await supabase
-.from("usuarios")
-.select("*")
-.eq("id",id)
-.single()
-
-document.getElementById("nome").value=data.nome
-document.getElementById("email").value=data.email
-document.getElementById("perfil").value=data.perfil
-document.getElementById("agencia").value=data.agencia
-
-editandoId=id
-
-}
-
-window.excluir=async(id)=>{
-
-if(!confirm("Excluir usuário?")) return
-
-await supabase
-.from("usuarios")
-.delete()
-.eq("id",id)
-
-carregar()
-
-}
-
-async function carregar(){
-
-const {data}=await supabase
-.from("usuarios")
-.select("*")
-
-const lista=document.getElementById("lista")
-
-lista.innerHTML=""
-
-data.forEach(u=>{
-
-lista.innerHTML+=`
-
-<tr>
-
-<td>${u.nome}</td>
-<td>${u.email}</td>
-<td>${u.perfil}</td>
-<td>${u.agencia}</td>
-
-<td>
-
-<button class="editar" onclick="editar('${u.id}')">
-Editar
-</button>
-
-<button class="excluir" onclick="excluir('${u.id}')">
-Excluir
-</button>
-
-</td>
-
-</tr>
-
-`
-
-})
-
-}
-
-const ok=await validarADM()
-
-if(ok){
-
-await carregarAgencias()
-
-carregar()
-
-}
-
-</script>
-
-</body>
-</html>
