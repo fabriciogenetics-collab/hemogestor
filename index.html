@@ -315,7 +315,7 @@
 
     <section class="painel-esquerdo">
       <div class="logo-box">
-        <img src="logo-gsh.png" alt="Logo Grupo GSH">
+        <img id="logoSistema" src="logo-gsh.png" alt="Logo do sistema">
       </div>
 
       <h1 class="titulo-sistema">HemoGestor</h1>
@@ -389,6 +389,16 @@
 
     const supabase = createClient(supabaseUrl, supabaseKey)
 
+    const logoStorageUrl = `${supabaseUrl}/storage/v1/object/public/logos/logo-principal.png`
+
+    function carregarLogo(){
+      const img = document.getElementById("logoSistema")
+      img.src = `${logoStorageUrl}?t=${Date.now()}`
+      img.onerror = () => {
+        img.src = "logo-gsh.png"
+      }
+    }
+
     window.login = async () => {
       const email = document.getElementById("email").value.trim()
       const senha = document.getElementById("senha").value
@@ -423,6 +433,8 @@
         window.location = "dashboard.html"
       }
     }
+
+    carregarLogo()
   </script>
 </body>
 </html>
