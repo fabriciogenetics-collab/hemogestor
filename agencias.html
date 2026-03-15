@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Agências</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f4f4f4;
+}
+
+.topo{
+background:#b30000;
+color:white;
+padding:20px;
+font-size:22px;
+display:flex;
+justify-content:space-between;
+}
+
+.topo a{
+color:white;
+text-decoration:none;
+background:#d91c1c;
+padding:10px 15px;
+border-radius:6px;
+}
+
+.container{
+padding:30px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+margin-bottom:30px;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+background:#c40000;
+color:white;
+border:none;
+padding:12px;
+border-radius:6px;
+cursor:pointer;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th,td{
+border-bottom:1px solid #ddd;
+padding:10px;
+text-align:left;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="topo">
+Agências
+<a href="dashboard.html">Voltar</a>
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h3>Criar nova agência</h3>
+
+<input id="nome" placeholder="Nome da agência">
+
+<button onclick="criar()">Criar agência</button>
+
+</div>
+
+<div class="card">
+
+<h3>Agências cadastradas</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Nome</th>
+</tr>
+</thead>
+
+<tbody id="lista"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+
+const supabaseUrl="https://awtszrqsnsgncdrlzizy.supabase.co"
+const supabaseKey="sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
+
+const supabase=createClient(supabaseUrl,supabaseKey)
+
+window.criar=async()=>{
+
+const nome=document.getElementById("nome").value
+
+await supabase
+.from("agencias")
+.insert([{nome_agencia:nome}])
+
+carregar()
+
+}
+
+async function carregar(){
+
+const {data}=await supabase
+.from("agencias")
+.select("*")
+
+const lista=document.getElementById("lista")
+
+lista.innerHTML=""
+
+data.forEach(a=>{
+
+lista.innerHTML+=`
+<tr>
+<td>${a.nome_agencia}</td>
+</tr>
+`
+
+})
+
+}
+
+carregar()
+
+</script>
+
+</body>
+
+</html>
