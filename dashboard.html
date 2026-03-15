@@ -1,293 +1,276 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HemoGestor - Dashboard</title>
+
+<title>HemoGestor</title>
 
 <link rel="manifest" href="/manifest.json">
+
 <meta name="theme-color" content="#b30000">
 
 <style>
-*{box-sizing:border-box}
+
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f5f5f5;
+margin:0;
+font-family:Arial;
+background:#f4f4f4;
 }
+
 .topo{
-  background:#b30000;
-  color:white;
-  padding:20px 24px;
-  font-size:24px;
-  font-weight:bold;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+background:#b30000;
+color:white;
+padding:20px;
+font-size:22px;
+font-weight:bold;
+display:flex;
+justify-content:space-between;
 }
+
 .topo button{
-  background:#d91c1c;
-  color:white;
-  border:none;
-  padding:10px 16px;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:15px;
+background:#d91c1c;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:6px;
 }
+
 .container{
-  padding:28px;
+padding:30px;
 }
+
 .card{
-  background:white;
-  padding:24px;
-  border-radius:14px;
-  box-shadow:0 0 12px rgba(0,0,0,0.08);
-  margin-bottom:22px;
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+margin-bottom:25px;
 }
-h2{
-  margin-top:0;
-  margin-bottom:10px;
-}
+
 .grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
-  margin-top:18px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
 }
+
+.indicador{
+background:#fafafa;
+padding:20px;
+border-radius:10px;
+border:1px solid #eee;
+}
+
+.indicador span{
+display:block;
+color:#666;
+margin-bottom:10px;
+}
+
+.indicador strong{
+font-size:28px;
+color:#b30000;
+}
+
+.modulos{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-top:20px;
+}
+
 .modulo{
-  display:block;
-  text-decoration:none;
-  color:#222;
-  background:#fff;
-  border:2px solid #ececec;
-  border-radius:12px;
-  padding:22px;
-  box-shadow:0 0 8px rgba(0,0,0,0.04);
-  transition:0.2s;
+background:white;
+padding:20px;
+border-radius:10px;
+text-decoration:none;
+color:black;
+border:2px solid #eee;
 }
+
 .modulo:hover{
-  border-color:#b30000;
-  transform:translateY(-2px);
+border-color:#b30000;
 }
-.modulo strong{
-  display:block;
-  font-size:18px;
-  margin-bottom:8px;
-  color:#b30000;
-}
-.indicadores{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:16px;
-  margin-top:18px;
-}
-.mini-card{
-  background:#fafafa;
-  border-radius:12px;
-  padding:18px;
-  border:1px solid #eee;
-}
-.mini-card span{
-  display:block;
-  color:#666;
-  margin-bottom:8px;
-  font-size:14px;
-}
-.mini-card strong{
-  font-size:28px;
-  color:#b30000;
-}
-.usuario-box{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:16px;
-  margin-top:16px;
-}
-.usuario-item{
-  background:#fafafa;
-  border:1px solid #eee;
-  border-radius:12px;
-  padding:16px;
-}
-.usuario-item span{
-  display:block;
-  color:#666;
-  margin-bottom:8px;
-}
-.usuario-item strong{
-  color:#b30000;
-  font-size:20px;
-}
-.instalar-box{
-  background:#eef6ff;
-  border:1px solid #cfe2ff;
-  border-radius:12px;
-  padding:16px;
-  margin-top:18px;
-  display:none;
-}
-.instalar-box button{
-  margin-top:12px;
-}
+
 </style>
+
 </head>
+
 <body>
 
 <div class="topo">
-  <span>HemoGestor</span>
-  <button id="btnSair">Sair</button>
+HemoGestor
+<button id="sair">Sair</button>
 </div>
 
 <div class="container">
 
-  <div class="card">
-    <h2>Dashboard inicial</h2>
-    <p>Bem-vindo ao HemoGestor. Escolha um módulo abaixo para começar.</p>
+<div class="card">
 
-    <div class="usuario-box">
-      <div class="usuario-item">
-        <span>Email do usuário</span>
-        <strong id="usuarioEmail">Carregando...</strong>
-      </div>
-      <div class="usuario-item">
-        <span>Perfil</span>
-        <strong id="usuarioPerfil">Carregando...</strong>
-      </div>
-      <div class="usuario-item">
-        <span>Agência</span>
-        <strong id="usuarioAgencia">Carregando...</strong>
-      </div>
-    </div>
+<h3>Resumo da Agência</h3>
 
-    <div id="instalarApp" class="instalar-box">
-      <strong>Instalar HemoGestor</strong>
-      <p>Você pode instalar o sistema no celular ou computador como aplicativo.</p>
-      <button id="btnInstalar">Instalar app</button>
-    </div>
+<p><strong>Agência:</strong> <span id="agencia"></span></p>
 
-    <div class="indicadores">
-      <div class="mini-card">
-        <span>Transfusões do mês</span>
-        <strong>0</strong>
-      </div>
-      <div class="mini-card">
-        <span>Reações registradas</span>
-        <strong>0</strong>
-      </div>
-      <div class="mini-card">
-        <span>Indicadores ativos</span>
-        <strong>0</strong>
-      </div>
-      <div class="mini-card">
-        <span>Itens em estoque</span>
-        <strong>0</strong>
-      </div>
-    </div>
-  </div>
+<div class="grid">
 
-  <div class="grid">
-    <a class="modulo" href="transfusoes.html">
-      <strong>Registrar transfusão</strong>
-      Cadastro e acompanhamento dos atos transfusionais.
-    </a>
+<div class="indicador">
+<span>Transfusões do mês</span>
+<strong id="transfusoes">0</strong>
+</div>
 
-    <a class="modulo" href="reacoes.html">
-      <strong>Reação transfusional</strong>
-      Registro, classificação e histórico de reações.
-    </a>
+<div class="indicador">
+<span>Reações registradas</span>
+<strong id="reacoes">0</strong>
+</div>
 
-    <a class="modulo" href="indicadores.html">
-      <strong>Indicadores</strong>
-      Indicadores hemoterápicos e análises automáticas.
-    </a>
+<div class="indicador">
+<span>Taxa de reação</span>
+<strong id="taxa">0%</strong>
+</div>
 
-    <a class="modulo" href="estoque.html">
-      <strong>Estoque</strong>
-      Controle de entrada, saída, descarte e saldo.
-    </a>
+<div class="indicador">
+<span>Itens com estoque baixo</span>
+<strong id="estoque">0</strong>
+</div>
 
-    <a class="modulo" href="relatorios.html">
-      <strong>Relatórios</strong>
-      Exportação e visualização de relatórios do sistema.
-    </a>
+</div>
 
-    <a class="modulo" href="usuarios.html">
-      <strong>Usuários</strong>
-      Perfis, permissões e vínculo com agências.
-    </a>
+</div>
 
-    <a class="modulo" href="acompanhamento.html">
-      <strong>Acompanhamento transfusional</strong>
-      Uso rápido no celular com dupla checagem e sinais vitais.
-    </a>
-  </div>
+<div class="card">
+
+<h3>Módulos</h3>
+
+<div class="modulos">
+
+<a class="modulo" href="transfusoes.html">
+Registrar transfusão
+</a>
+
+<a class="modulo" href="reacoes.html">
+Reações transfusionais
+</a>
+
+<a class="modulo" href="acompanhamento.html">
+Acompanhamento transfusional
+</a>
+
+<a class="modulo" href="estoque.html">
+Controle de estoque
+</a>
+
+<a class="modulo" href="indicadores.html">
+Indicadores
+</a>
+
+<a class="modulo" href="relatorios.html">
+Relatórios
+</a>
+
+</div>
+
+</div>
 
 </div>
 
 <script type="module">
+
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
-const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
-const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
+const supabaseUrl="https://awtszrqsnsgncdrlzizy.supabase.co"
+const supabaseKey="sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
 
-const supabase = createClient(supabaseUrl, supabaseKey)
+const supabase=createClient(supabaseUrl,supabaseKey)
 
-async function carregarUsuarioLogado(){
-  const { data: sessaoData } = await supabase.auth.getSession()
+let agenciaUsuario=""
 
-  if(!sessaoData.session){
-    window.location.href = "/"
-    return
-  }
+async function carregarUsuario(){
 
-  const email = sessaoData.session.user.email
-  document.getElementById("usuarioEmail").innerText = email
+const {data}=await supabase.auth.getSession()
 
-  const { data: usuario, error } = await supabase
-    .from("usuarios")
-    .select("*")
-    .eq("email", email)
-    .single()
+const email=data.session.user.email
 
-  if(error || !usuario){
-    document.getElementById("usuarioPerfil").innerText = "Não encontrado"
-    document.getElementById("usuarioAgencia").innerText = "Não definida"
-    return
-  }
+const {data:usuario}=await supabase
+.from("usuarios")
+.select("*")
+.eq("email",email)
+.single()
 
-  document.getElementById("usuarioPerfil").innerText = usuario.perfil || "-"
-  document.getElementById("usuarioAgencia").innerText = usuario.agencia || "-"
+agenciaUsuario=usuario.agencia
+
+document.getElementById("agencia").innerText=agenciaUsuario
+
 }
 
-document.getElementById("btnSair").addEventListener("click", async () => {
-  await supabase.auth.signOut()
-  window.location.href = "/"
-})
+async function carregarIndicadores(){
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/service-worker.js")
-  })
+const {data:transfusoes}=await supabase
+.from("transfusoes")
+.select("*")
+.eq("agencia",agenciaUsuario)
+
+const {data:reacoes}=await supabase
+.from("reacoes_transfusionais")
+.select("*")
+.eq("agencia",agenciaUsuario)
+
+const {data:estoque}=await supabase
+.from("estoque")
+.select("*")
+.eq("agencia",agenciaUsuario)
+
+document.getElementById("transfusoes").innerText=transfusoes.length
+document.getElementById("reacoes").innerText=reacoes.length
+
+let taxa=0
+
+if(transfusoes.length>0){
+
+taxa=((reacoes.length/transfusoes.length)*100).toFixed(2)
+
 }
 
-let deferredPrompt = null
+document.getElementById("taxa").innerText=taxa+"%"
 
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault()
-  deferredPrompt = e
-  document.getElementById("instalarApp").style.display = "block"
+let mapa={}
+
+estoque.forEach(m=>{
+
+if(!mapa[m.item]) mapa[m.item]=0
+
+if(m.tipo_movimento==="Entrada") mapa[m.item]+=Number(m.quantidade)
+else mapa[m.item]-=Number(m.quantidade)
+
 })
 
-document.getElementById("btnInstalar").addEventListener("click", async () => {
-  if (!deferredPrompt) return
-  deferredPrompt.prompt()
-  await deferredPrompt.userChoice
-  deferredPrompt = null
-  document.getElementById("instalarApp").style.display = "none"
+let baixo=0
+
+Object.values(mapa).forEach(q=>{
+
+if(q<=3) baixo++
+
 })
 
-carregarUsuarioLogado()
+document.getElementById("estoque").innerText=baixo
+
+}
+
+document.getElementById("sair").onclick=async()=>{
+
+await supabase.auth.signOut()
+
+window.location="/"
+
+}
+
+await carregarUsuario()
+
+carregarIndicadores()
+
 </script>
 
 </body>
+
 </html>
