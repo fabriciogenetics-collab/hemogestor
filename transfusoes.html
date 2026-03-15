@@ -4,147 +4,178 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Registrar Transfusão</title>
 
 <style>
+
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f4f4f4;
+margin:0;
+font-family:Arial;
+background:#f4f4f4;
 }
 
 .topo{
-  background:#b30000;
-  color:white;
-  padding:20px;
-  font-size:22px;
-  font-weight:bold;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+background:#b30000;
+color:white;
+padding:20px;
+font-size:22px;
+font-weight:bold;
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
 .topo a{
-  color:white;
-  text-decoration:none;
-  background:#d91c1c;
-  padding:10px 14px;
-  border-radius:8px;
-  font-size:14px;
+color:white;
+text-decoration:none;
+background:#d91c1c;
+padding:10px 15px;
+border-radius:6px;
 }
 
 .container{
-  padding:30px;
+padding:30px;
 }
 
 .card{
-  background:white;
-  padding:25px;
-  border-radius:10px;
-  box-shadow:0 0 10px rgba(0,0,0,0.1);
-  max-width:850px;
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+max-width:900px;
+margin-bottom:30px;
 }
 
 input,select,textarea{
-  width:100%;
-  padding:10px;
-  margin-top:5px;
-  margin-bottom:15px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  box-sizing:border-box;
-  font-size:15px;
-}
-
-textarea{
-  min-height:100px;
-  resize:vertical;
+width:100%;
+padding:10px;
+margin-top:5px;
+margin-bottom:15px;
+border-radius:6px;
+border:1px solid #ccc;
 }
 
 button{
-  background:#c40000;
-  color:white;
-  border:none;
-  padding:12px 18px;
-  border-radius:6px;
-  cursor:pointer;
-  font-size:16px;
+background:#c40000;
+color:white;
+border:none;
+padding:12px;
+border-radius:6px;
+cursor:pointer;
+font-size:16px;
 }
 
-button:hover{
-  background:#a00000;
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
 }
 
-small{
-  color:#666;
-  display:block;
-  margin-top:-10px;
-  margin-bottom:15px;
+th,td{
+border-bottom:1px solid #ddd;
+padding:10px;
+text-align:left;
+font-size:14px;
 }
+
+th{
+background:#fafafa;
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="topo">
-  <span>Registrar transfusão</span>
-  <a href="dashboard.html">Voltar</a>
+Registrar transfusão
+<a href="dashboard.html">Voltar</a>
 </div>
 
 <div class="container">
-  <div class="card">
 
-    <label>Paciente *</label>
-    <input id="paciente" placeholder="Nome ou identificação do paciente">
+<div class="card">
 
-    <label>Prontuário</label>
-    <input id="prontuario" placeholder="Número do prontuário">
+<h3>Nova transfusão</h3>
 
-    <label>Leito</label>
-    <input id="leito" placeholder="Ex.: UTI 2 / Leito 15">
+<label>Paciente *</label>
+<input id="paciente">
 
-    <label>Data da transfusão *</label>
-    <input type="date" id="data">
+<label>Prontuário</label>
+<input id="prontuario">
 
-    <label>Hora da transfusão</label>
-    <input type="time" id="hora">
+<label>Leito</label>
+<input id="leito">
 
-    <label>Hemocomponente *</label>
-    <select id="hemocomponente">
-      <option value="">Selecione</option>
-      <option>Concentrado de hemácias</option>
-      <option>Plaquetas</option>
-      <option>Plasma</option>
-      <option>Crioprecipitado</option>
-    </select>
+<label>Data *</label>
+<input type="date" id="data">
 
-    <label>Número da bolsa</label>
-    <input id="bolsa" placeholder="Número da bolsa">
+<label>Hora</label>
+<input type="time" id="hora">
 
-    <label>Volume</label>
-    <input id="volume" placeholder="Ex.: 300 ml">
+<label>Hemocomponente *</label>
+<select id="hemocomponente">
+<option value="">Selecione</option>
+<option>Concentrado de hemácias</option>
+<option>Plaquetas</option>
+<option>Plasma</option>
+<option>Crioprecipitado</option>
+</select>
 
-    <label>Médico solicitante</label>
-    <input id="medico" placeholder="Nome do médico">
+<label>Número da bolsa</label>
+<input id="bolsa">
 
-    <label>Profissional que instalou</label>
-    <input id="profissional" placeholder="Nome do profissional">
+<label>Volume</label>
+<input id="volume">
 
-    <label>Reação transfusional</label>
-    <select id="reacao">
-      <option>Não</option>
-      <option>Sim</option>
-    </select>
+<label>Médico solicitante</label>
+<input id="medico">
 
-    <label>Observações</label>
-    <textarea id="obs" placeholder="Observações adicionais"></textarea>
+<label>Profissional que instalou</label>
+<input id="profissional">
 
-    <button id="btnSalvar">Salvar transfusão</button>
+<label>Reação transfusional</label>
+<select id="reacao">
+<option>Não</option>
+<option>Sim</option>
+</select>
 
-  </div>
+<label>Observações</label>
+<textarea id="obs"></textarea>
+
+<button onclick="salvar()">Salvar transfusão</button>
+
+</div>
+
+<div class="card">
+
+<h3>Transfusões registradas</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Data</th>
+<th>Paciente</th>
+<th>Hemocomponente</th>
+<th>Bolsa</th>
+<th>Reação</th>
+</tr>
+</thead>
+
+<tbody id="lista">
+
+</tbody>
+
+</table>
+
+</div>
+
 </div>
 
 <script type="module">
+
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
@@ -152,76 +183,91 @@ const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-document.getElementById("btnSalvar").addEventListener("click", async () => {
-  const paciente = document.getElementById("paciente").value.trim()
-  const prontuario = document.getElementById("prontuario").value.trim()
-  const leito = document.getElementById("leito").value.trim()
-  const data = document.getElementById("data").value
-  const hora = document.getElementById("hora").value
-  const hemocomponente = document.getElementById("hemocomponente").value
-  const numero_bolsa = document.getElementById("bolsa").value.trim()
-  const volume = document.getElementById("volume").value.trim()
-  const medico = document.getElementById("medico").value.trim()
-  const profissional = document.getElementById("profissional").value.trim()
-  const reacao = document.getElementById("reacao").value
-  const observacoes = document.getElementById("obs").value.trim()
+async function carregar(){
 
-  if (!paciente) {
-    alert("Preencha o campo Paciente.")
-    return
-  }
+const { data } = await supabase
+.from("transfusoes")
+.select("*")
+.order("created_at",{ascending:false})
 
-  if (!data) {
-    alert("Preencha o campo Data da transfusão.")
-    return
-  }
+const lista = document.getElementById("lista")
 
-  if (!hemocomponente) {
-    alert("Selecione o Hemocomponente.")
-    return
-  }
+lista.innerHTML=""
 
-  const { error } = await supabase
-    .from("transfusoes")
-    .insert([
-      {
-        paciente: paciente,
-        prontuario: prontuario,
-        leito: leito,
-        data_transfusao: data,
-        hora_transfusao: hora,
-        hemocomponente: hemocomponente,
-        numero_bolsa: numero_bolsa,
-        volume: volume,
-        medico: medico,
-        profissional: profissional,
-        reacao: reacao,
-        observacoes: observacoes
-      }
-    ])
+data.forEach(t=>{
 
-  if (error) {
-    alert("Erro Supabase: " + error.message)
-    console.log(error)
-    return
-  }
+lista.innerHTML += `
+<tr>
+<td>${t.data_transfusao}</td>
+<td>${t.paciente}</td>
+<td>${t.hemocomponente}</td>
+<td>${t.numero_bolsa ?? ""}</td>
+<td>${t.reacao}</td>
+</tr>
+`
 
-  alert("Transfusão registrada com sucesso")
-
-  document.getElementById("paciente").value = ""
-  document.getElementById("prontuario").value = ""
-  document.getElementById("leito").value = ""
-  document.getElementById("data").value = ""
-  document.getElementById("hora").value = ""
-  document.getElementById("hemocomponente").value = ""
-  document.getElementById("bolsa").value = ""
-  document.getElementById("volume").value = ""
-  document.getElementById("medico").value = ""
-  document.getElementById("profissional").value = ""
-  document.getElementById("reacao").value = "Não"
-  document.getElementById("obs").value = ""
 })
+
+}
+
+window.salvar = async function(){
+
+const paciente = document.getElementById("paciente").value
+const prontuario = document.getElementById("prontuario").value
+const leito = document.getElementById("leito").value
+const data = document.getElementById("data").value
+const hora = document.getElementById("hora").value
+const hemocomponente = document.getElementById("hemocomponente").value
+const numero_bolsa = document.getElementById("bolsa").value
+const volume = document.getElementById("volume").value
+const medico = document.getElementById("medico").value
+const profissional = document.getElementById("profissional").value
+const reacao = document.getElementById("reacao").value
+const observacoes = document.getElementById("obs").value
+
+if(!paciente || !data || !hemocomponente){
+
+alert("Preencha Paciente, Data e Hemocomponente")
+
+return
+
+}
+
+const { error } = await supabase
+.from("transfusoes")
+.insert([{
+paciente,
+prontuario,
+leito,
+data_transfusao:data,
+hora_transfusao:hora,
+hemocomponente,
+numero_bolsa,
+volume,
+medico,
+profissional,
+reacao,
+observacoes
+}])
+
+if(error){
+
+alert(error.message)
+
+}else{
+
+alert("Transfusão registrada")
+
+carregar()
+
+}
+
+}
+
+carregar()
+
 </script>
 
 </body>
+
 </html>
