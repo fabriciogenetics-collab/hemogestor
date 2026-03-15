@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>HemoGestor</title>
 
 <link rel="manifest" href="/manifest.json">
-
 <meta name="theme-color" content="#b30000">
 
 <style>
-
 body{
 margin:0;
-font-family:Arial;
+font-family:Arial,sans-serif;
 background:#f4f4f4;
 }
 
@@ -28,6 +23,7 @@ font-size:22px;
 font-weight:bold;
 display:flex;
 justify-content:space-between;
+align-items:center;
 }
 
 .topo button{
@@ -36,6 +32,7 @@ color:white;
 border:none;
 padding:10px 15px;
 border-radius:6px;
+cursor:pointer;
 }
 
 .container{
@@ -74,6 +71,31 @@ font-size:28px;
 color:#b30000;
 }
 
+.usuario-box{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:16px;
+margin-top:16px;
+}
+
+.usuario-item{
+background:#fafafa;
+border:1px solid #eee;
+border-radius:12px;
+padding:16px;
+}
+
+.usuario-item span{
+display:block;
+color:#666;
+margin-bottom:8px;
+}
+
+.usuario-item strong{
+color:#b30000;
+font-size:20px;
+}
+
 .modulos{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -88,14 +110,40 @@ border-radius:10px;
 text-decoration:none;
 color:black;
 border:2px solid #eee;
+transition:0.2s;
 }
 
 .modulo:hover{
 border-color:#b30000;
+transform:translateY(-2px);
 }
 
-</style>
+.modulo strong{
+display:block;
+color:#b30000;
+margin-bottom:8px;
+font-size:18px;
+}
 
+.instalar-box{
+background:#eef6ff;
+border:1px solid #cfe2ff;
+border-radius:12px;
+padding:16px;
+margin-top:18px;
+display:none;
+}
+
+.instalar-box button{
+margin-top:12px;
+background:#c40000;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:6px;
+cursor:pointer;
+}
+</style>
 </head>
 
 <body>
@@ -111,9 +159,34 @@ HemoGestor
 
 <h3>Resumo da Agência</h3>
 
-<p><strong>Agência:</strong> <span id="agencia"></span></p>
+<p><strong>Bem-vindo ao HemoGestor.</strong></p>
 
-<div class="grid">
+<div class="usuario-box">
+
+<div class="usuario-item">
+<span>Email do usuário</span>
+<strong id="usuarioEmail">Carregando...</strong>
+</div>
+
+<div class="usuario-item">
+<span>Perfil</span>
+<strong id="usuarioPerfil">Carregando...</strong>
+</div>
+
+<div class="usuario-item">
+<span>Agência</span>
+<strong id="usuarioAgencia">Carregando...</strong>
+</div>
+
+</div>
+
+<div id="instalarApp" class="instalar-box">
+<strong>Instalar HemoGestor</strong>
+<p>Você pode instalar o sistema no celular ou computador como aplicativo.</p>
+<button id="btnInstalar">Instalar app</button>
+</div>
+
+<div class="grid" style="margin-top:20px;">
 
 <div class="indicador">
 <span>Transfusões do mês</span>
@@ -146,27 +219,48 @@ HemoGestor
 <div class="modulos">
 
 <a class="modulo" href="transfusoes.html">
-Registrar transfusão
+<strong>Registrar transfusão</strong>
+Cadastro e acompanhamento dos atos transfusionais.
 </a>
 
 <a class="modulo" href="reacoes.html">
-Reações transfusionais
+<strong>Reações transfusionais</strong>
+Registro, classificação e histórico de reações.
 </a>
 
 <a class="modulo" href="acompanhamento.html">
-Acompanhamento transfusional
+<strong>Acompanhamento transfusional</strong>
+Uso rápido no celular com dupla checagem e sinais vitais.
 </a>
 
 <a class="modulo" href="estoque.html">
-Controle de estoque
+<strong>Controle de estoque</strong>
+Entrada, saída, descarte e saldo por agência.
 </a>
 
 <a class="modulo" href="indicadores.html">
-Indicadores
+<strong>Indicadores</strong>
+Indicadores automáticos, gráficos e análise.
 </a>
 
 <a class="modulo" href="relatorios.html">
-Relatórios
+<strong>Relatórios</strong>
+Relatório do comitê transfusional e impressão.
+</a>
+
+<a class="modulo" href="usuarios.html" id="moduloUsuarios" style="display:none;">
+<strong>Usuários</strong>
+Perfis, permissões e vínculo com agências.
+</a>
+
+<a class="modulo" href="agencias.html" id="moduloAgencias" style="display:none;">
+<strong>Agências</strong>
+Cadastro e gestão das agências do sistema.
+</a>
+
+<a class="modulo" href="configuracoes.html" id="moduloConfiguracoes" style="display:none;">
+<strong>Configurações</strong>
+Logo do sistema e ajustes visuais.
 </a>
 
 </div>
@@ -176,101 +270,142 @@ Relatórios
 </div>
 
 <script type="module">
-
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
-const supabaseUrl="https://awtszrqsnsgncdrlzizy.supabase.co"
-const supabaseKey="sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
+const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
+const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
 
-const supabase=createClient(supabaseUrl,supabaseKey)
+const supabase = createClient(supabaseUrl, supabaseKey)
 
-let agenciaUsuario=""
+let agenciaUsuario = ""
+let perfilUsuario = ""
+let emailUsuario = ""
 
 async function carregarUsuario(){
 
-const {data}=await supabase.auth.getSession()
+const { data: sessaoData } = await supabase.auth.getSession()
 
-const email=data.session.user.email
+if(!sessaoData.session){
+window.location.href = "/"
+return
+}
 
-const {data:usuario}=await supabase
+emailUsuario = sessaoData.session.user.email
+document.getElementById("usuarioEmail").innerText = emailUsuario
+
+const { data: usuario, error } = await supabase
 .from("usuarios")
 .select("*")
-.eq("email",email)
+.eq("email", emailUsuario)
 .single()
 
-agenciaUsuario=usuario.agencia
+if(error || !usuario){
+document.getElementById("usuarioPerfil").innerText = "Não encontrado"
+document.getElementById("usuarioAgencia").innerText = "Não definida"
+return
+}
 
-document.getElementById("agencia").innerText=agenciaUsuario
+agenciaUsuario = usuario.agencia || ""
+perfilUsuario = usuario.perfil || ""
 
+document.getElementById("usuarioPerfil").innerText = perfilUsuario
+document.getElementById("usuarioAgencia").innerText = agenciaUsuario || "-"
+
+if(perfilUsuario === "ADM"){
+document.getElementById("moduloUsuarios").style.display = "block"
+document.getElementById("moduloAgencias").style.display = "block"
+document.getElementById("moduloConfiguracoes").style.display = "block"
+}
 }
 
 async function carregarIndicadores(){
 
-const {data:transfusoes}=await supabase
+if(!agenciaUsuario) return
+
+const { data: transfusoes } = await supabase
 .from("transfusoes")
 .select("*")
-.eq("agencia",agenciaUsuario)
+.eq("agencia", agenciaUsuario)
 
-const {data:reacoes}=await supabase
+const { data: reacoes } = await supabase
 .from("reacoes_transfusionais")
 .select("*")
-.eq("agencia",agenciaUsuario)
+.eq("agencia", agenciaUsuario)
 
-const {data:estoque}=await supabase
+const { data: estoque } = await supabase
 .from("estoque")
 .select("*")
-.eq("agencia",agenciaUsuario)
+.eq("agencia", agenciaUsuario)
 
-document.getElementById("transfusoes").innerText=transfusoes.length
-document.getElementById("reacoes").innerText=reacoes.length
+const totalTransfusoes = transfusoes ? transfusoes.length : 0
+const totalReacoes = reacoes ? reacoes.length : 0
 
-let taxa=0
+document.getElementById("transfusoes").innerText = totalTransfusoes
+document.getElementById("reacoes").innerText = totalReacoes
 
-if(transfusoes.length>0){
+let taxa = 0
 
-taxa=((reacoes.length/transfusoes.length)*100).toFixed(2)
-
+if(totalTransfusoes > 0){
+taxa = ((totalReacoes / totalTransfusoes) * 100).toFixed(2)
 }
 
-document.getElementById("taxa").innerText=taxa+"%"
+document.getElementById("taxa").innerText = taxa + "%"
 
-let mapa={}
+let mapa = {}
 
-estoque.forEach(m=>{
+if(estoque){
+estoque.forEach(m => {
 
-if(!mapa[m.item]) mapa[m.item]=0
+if(!mapa[m.item]) mapa[m.item] = 0
 
-if(m.tipo_movimento==="Entrada") mapa[m.item]+=Number(m.quantidade)
-else mapa[m.item]-=Number(m.quantidade)
-
-})
-
-let baixo=0
-
-Object.values(mapa).forEach(q=>{
-
-if(q<=3) baixo++
-
-})
-
-document.getElementById("estoque").innerText=baixo
-
+if(m.tipo_movimento === "Entrada"){
+mapa[m.item] += Number(m.quantidade)
+}else{
+mapa[m.item] -= Number(m.quantidade)
 }
 
-document.getElementById("sair").onclick=async()=>{
+})
+}
 
+let baixo = 0
+
+Object.values(mapa).forEach(q => {
+if(q <= 3) baixo++
+})
+
+document.getElementById("estoque").innerText = baixo
+}
+
+document.getElementById("sair").onclick = async () => {
 await supabase.auth.signOut()
-
-window.location="/"
-
+window.location = "/"
 }
+
+if ("serviceWorker" in navigator) {
+window.addEventListener("load", () => {
+navigator.serviceWorker.register("/service-worker.js")
+})
+}
+
+let deferredPrompt = null
+
+window.addEventListener("beforeinstallprompt", (e) => {
+e.preventDefault()
+deferredPrompt = e
+document.getElementById("instalarApp").style.display = "block"
+})
+
+document.getElementById("btnInstalar")?.addEventListener("click", async () => {
+if (!deferredPrompt) return
+deferredPrompt.prompt()
+await deferredPrompt.userChoice
+deferredPrompt = null
+document.getElementById("instalarApp").style.display = "none"
+})
 
 await carregarUsuario()
-
-carregarIndicadores()
-
+await carregarIndicadores()
 </script>
 
 </body>
-
 </html>
