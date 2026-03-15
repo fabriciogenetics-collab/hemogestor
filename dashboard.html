@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HemoGestor - Dashboard</title>
 
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#b30000">
+
 <style>
 *{box-sizing:border-box}
 body{
@@ -115,6 +118,17 @@ h2{
   color:#b30000;
   font-size:20px;
 }
+.instalar-box{
+  background:#eef6ff;
+  border:1px solid #cfe2ff;
+  border-radius:12px;
+  padding:16px;
+  margin-top:18px;
+  display:none;
+}
+.instalar-box button{
+  margin-top:12px;
+}
 </style>
 </head>
 <body>
@@ -143,6 +157,12 @@ h2{
         <span>Agência</span>
         <strong id="usuarioAgencia">Carregando...</strong>
       </div>
+    </div>
+
+    <div id="instalarApp" class="instalar-box">
+      <strong>Instalar HemoGestor</strong>
+      <p>Você pode instalar o sistema no celular ou computador como aplicativo.</p>
+      <button id="btnInstalar">Instalar app</button>
     </div>
 
     <div class="indicadores">
@@ -195,6 +215,11 @@ h2{
       <strong>Usuários</strong>
       Perfis, permissões e vínculo com agências.
     </a>
+
+    <a class="modulo" href="acompanhamento.html">
+      <strong>Acompanhamento transfusional</strong>
+      Uso rápido no celular com dupla checagem e sinais vitais.
+    </a>
   </div>
 
 </div>
@@ -216,7 +241,6 @@ async function carregarUsuarioLogado(){
   }
 
   const email = sessaoData.session.user.email
-
   document.getElementById("usuarioEmail").innerText = email
 
   const { data: usuario, error } = await supabase
@@ -238,6 +262,28 @@ async function carregarUsuarioLogado(){
 document.getElementById("btnSair").addEventListener("click", async () => {
   await supabase.auth.signOut()
   window.location.href = "/"
+})
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js")
+  })
+}
+
+let deferredPrompt = null
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault()
+  deferredPrompt = e
+  document.getElementById("instalarApp").style.display = "block"
+})
+
+document.getElementById("btnInstalar").addEventListener("click", async () => {
+  if (!deferredPrompt) return
+  deferredPrompt.prompt()
+  await deferredPrompt.userChoice
+  deferredPrompt = null
+  document.getElementById("instalarApp").style.display = "none"
 })
 
 carregarUsuarioLogado()
