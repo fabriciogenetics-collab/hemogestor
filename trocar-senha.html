@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Trocar senha</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.card{
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+width:350px;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#b30000;
+color:white;
+border:none;
+border-radius:6px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h3>Trocar senha</h3>
+
+<p>Defina sua nova senha.</p>
+
+<input id="senha" type="password" placeholder="Nova senha">
+
+<input id="senha2" type="password" placeholder="Confirmar senha">
+
+<button onclick="trocar()">Atualizar senha</button>
+
+</div>
+
+<script type="module">
+
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+
+const supabaseUrl="https://awtszrqsnsgncdrlzizy.supabase.co"
+const supabaseKey="sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
+
+const supabase=createClient(supabaseUrl,supabaseKey)
+
+window.trocar=async()=>{
+
+const senha=document.getElementById("senha").value
+const senha2=document.getElementById("senha2").value
+
+if(senha!==senha2){
+alert("Senhas diferentes")
+return
+}
+
+const {data}=await supabase.auth.getUser()
+
+const email=data.user.email
+
+await supabase.auth.updateUser({
+password:senha
+})
+
+await supabase
+.from("usuarios")
+.update({
+primeiro_login:false
+})
+.eq("email",email)
+
+alert("Senha atualizada")
+
+window.location="dashboard.html"
+
+}
+
+</script>
+
+</body>
+
+</html>
