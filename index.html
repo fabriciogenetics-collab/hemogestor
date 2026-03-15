@@ -7,7 +7,7 @@
 
 <style>
 body{
-font-family:Arial;
+font-family:Arial,sans-serif;
 background:#f5f5f5;
 display:flex;
 justify-content:center;
@@ -15,7 +15,6 @@ align-items:center;
 height:100vh;
 margin:0;
 }
-
 .login-box{
 background:white;
 padding:40px;
@@ -24,12 +23,10 @@ width:360px;
 text-align:center;
 box-shadow:0 0 15px rgba(0,0,0,0.1);
 }
-
 h1{
 color:#b30000;
 margin-bottom:30px;
 }
-
 input{
 width:100%;
 padding:12px;
@@ -37,8 +34,8 @@ margin-bottom:15px;
 border-radius:6px;
 border:1px solid #ccc;
 font-size:15px;
+box-sizing:border-box;
 }
-
 button{
 width:100%;
 padding:12px;
@@ -49,76 +46,60 @@ border-radius:6px;
 font-size:16px;
 cursor:pointer;
 }
-
 #msg{
 margin-top:15px;
 color:#b30000;
 min-height:20px;
 }
 </style>
-
 </head>
-
 <body>
 
 <div class="login-box">
-
-<h1>HemoGestor</h1>
-
-<input id="email" type="email" placeholder="Email">
-<input id="senha" type="password" placeholder="Senha">
-
-<button onclick="login()">Entrar</button>
-
-<div id="msg"></div>
-
+  <h1>HemoGestor</h1>
+  <input id="email" type="email" placeholder="Email">
+  <input id="senha" type="password" placeholder="Senha">
+  <button id="btnLogin">Entrar</button>
+  <div id="msg"></div>
 </div>
 
 <script type="module">
-
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
-const supabaseUrl = "https://awtszrqsnsngcdrlzizy.supabase.co"
+const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
 const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
 
-const supabase = createClient(supabaseUrl, supabaseKey)
+const client = createClient(supabaseUrl, supabaseKey)
 
-window.login = async function(){
+document.getElementById("btnLogin").addEventListener("click", async () => {
+  const email = document.getElementById("email").value.trim()
+  const senha = document.getElementById("senha").value.trim()
+  const msg = document.getElementById("msg")
 
-const email = document.getElementById("email").value
-const senha = document.getElementById("senha").value
-const msg = document.getElementById("msg")
+  msg.style.color = "#b30000"
+  msg.innerText = ""
 
-msg.innerText=""
+  try {
+    const { error } = await client.auth.signInWithPassword({
+      email,
+      password: senha
+    })
 
-try{
+    if (error) {
+      msg.innerText = error.message
+      return
+    }
 
-const { data, error } = await supabase.auth.signInWithPassword({
-email: email,
-password: senha
+    msg.style.color = "green"
+    msg.innerText = "Login realizado com sucesso"
+
+    setTimeout(() => {
+      window.location.href = "dashboard.html"
+    }, 1000)
+  } catch (e) {
+    msg.innerText = "Erro de conexão com Supabase"
+  }
 })
-
-if(error){
-msg.innerText = error.message
-return
-}
-
-msg.style.color="green"
-msg.innerText="Login realizado"
-
-setTimeout(()=>{
-window.location.href="dashboard.html"
-},1000)
-
-}
-catch(e){
-
-msg.innerText="Erro de conexão com Supabase"
-
-}
-
-}
-
 </script>
 
 </body>
