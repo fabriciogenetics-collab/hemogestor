@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>HemoGestor</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-
 body{
-font-family: Arial;
+font-family:Arial;
 background:#f5f5f5;
 display:flex;
 justify-content:center;
@@ -55,16 +50,11 @@ font-size:16px;
 cursor:pointer;
 }
 
-button:hover{
-background:#a00000;
-}
-
 #msg{
 margin-top:15px;
 color:#b30000;
 min-height:20px;
 }
-
 </style>
 
 </head>
@@ -76,7 +66,6 @@ min-height:20px;
 <h1>HemoGestor</h1>
 
 <input id="email" type="email" placeholder="Email">
-
 <input id="senha" type="password" placeholder="Senha">
 
 <button onclick="login()">Entrar</button>
@@ -85,14 +74,16 @@ min-height:20px;
 
 </div>
 
-<script>
+<script type="module">
+
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const supabaseUrl = "https://awtszrqsnsngcdrlzizy.supabase.co"
 const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
 
-const client = window.supabase.createClient(supabaseUrl, supabaseKey)
+const supabase = createClient(supabaseUrl, supabaseKey)
 
-async function login(){
+window.login = async function(){
 
 const email = document.getElementById("email").value
 const senha = document.getElementById("senha").value
@@ -102,7 +93,7 @@ msg.innerText=""
 
 try{
 
-const { data, error } = await client.auth.signInWithPassword({
+const { data, error } = await supabase.auth.signInWithPassword({
 email: email,
 password: senha
 })
@@ -113,14 +104,13 @@ return
 }
 
 msg.style.color="green"
-msg.innerText="Login realizado com sucesso"
+msg.innerText="Login realizado"
 
 setTimeout(()=>{
 window.location.href="dashboard.html"
 },1000)
 
 }
-
 catch(e){
 
 msg.innerText="Erro de conexão com Supabase"
