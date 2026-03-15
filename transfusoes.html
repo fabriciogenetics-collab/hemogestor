@@ -41,7 +41,7 @@ body{
   padding:25px;
   border-radius:10px;
   box-shadow:0 0 10px rgba(0,0,0,0.1);
-  max-width:1100px;
+  max-width:1150px;
   margin-bottom:30px;
 }
 
@@ -132,6 +132,13 @@ th{
       Você está editando uma transfusão.
     </div>
 
+    <label>Agência *</label>
+    <select id="agencia">
+      <option value="">Selecione</option>
+      <option>Guarulhos</option>
+      <option>IBCC</option>
+    </select>
+
     <label>Paciente *</label>
     <input id="paciente" placeholder="Nome ou identificação do paciente">
 
@@ -188,6 +195,7 @@ th{
       <thead>
         <tr>
           <th>Data</th>
+          <th>Agência</th>
           <th>Paciente</th>
           <th>Hemocomponente</th>
           <th>Bolsa</th>
@@ -212,6 +220,7 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 let editandoId = null
 
 function limparFormulario(){
+  document.getElementById("agencia").value = ""
   document.getElementById("paciente").value = ""
   document.getElementById("prontuario").value = ""
   document.getElementById("leito").value = ""
@@ -229,6 +238,7 @@ function limparFormulario(){
 function entrarModoEdicao(registro){
   editandoId = registro.id
 
+  document.getElementById("agencia").value = registro.agencia || ""
   document.getElementById("paciente").value = registro.paciente || ""
   document.getElementById("prontuario").value = registro.prontuario || ""
   document.getElementById("leito").value = registro.leito || ""
@@ -267,12 +277,12 @@ async function carregar(){
   lista.innerHTML = ""
 
   if(error){
-    lista.innerHTML = `<tr><td colspan="6">Erro ao carregar registros: ${error.message}</td></tr>`
+    lista.innerHTML = `<tr><td colspan="7">Erro ao carregar registros: ${error.message}</td></tr>`
     return
   }
 
   if(!data || data.length === 0){
-    lista.innerHTML = `<tr><td colspan="6">Nenhuma transfusão registrada.</td></tr>`
+    lista.innerHTML = `<tr><td colspan="7">Nenhuma transfusão registrada.</td></tr>`
     return
   }
 
@@ -281,6 +291,7 @@ async function carregar(){
 
     tr.innerHTML = `
       <td>${t.data_transfusao ?? ""}</td>
+      <td>${t.agencia ?? ""}</td>
       <td>${t.paciente ?? ""}</td>
       <td>${t.hemocomponente ?? ""}</td>
       <td>${t.numero_bolsa ?? ""}</td>
@@ -339,6 +350,7 @@ async function carregar(){
 }
 
 document.getElementById("btnSalvar").addEventListener("click", async () => {
+  const agencia = document.getElementById("agencia").value
   const paciente = document.getElementById("paciente").value.trim()
   const prontuario = document.getElementById("prontuario").value.trim()
   const leito = document.getElementById("leito").value.trim()
@@ -351,6 +363,11 @@ document.getElementById("btnSalvar").addEventListener("click", async () => {
   const profissional = document.getElementById("profissional").value.trim()
   const reacao = document.getElementById("reacao").value
   const observacoes = document.getElementById("obs").value.trim()
+
+  if(!agencia){
+    alert("Selecione a Agência.")
+    return
+  }
 
   if(!paciente){
     alert("Preencha o campo Paciente.")
@@ -368,6 +385,7 @@ document.getElementById("btnSalvar").addEventListener("click", async () => {
   }
 
   const payload = {
+    agencia,
     paciente,
     prontuario,
     leito,
