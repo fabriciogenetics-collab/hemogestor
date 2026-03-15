@@ -1,223 +1,428 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HemoGestor</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    *{
+      box-sizing:border-box;
+    }
 
-<title>HemoGestor</title>
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.10), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.08), transparent 25%),
+        linear-gradient(135deg, #7a0000 0%, #b30000 45%, #d81f26 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
 
-<style>
+    .wrapper{
+      width:100%;
+      max-width:1120px;
+      display:grid;
+      grid-template-columns: 1.15fr 0.95fr;
+      background:rgba(255,255,255,0.97);
+      border-radius:24px;
+      overflow:hidden;
+      box-shadow:0 24px 60px rgba(0,0,0,0.22);
+      min-height:640px;
+    }
 
-*{
-box-sizing:border-box;
-}
+    .painel-esquerdo{
+      position:relative;
+      padding:54px 52px;
+      color:white;
+      background:
+        linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+        linear-gradient(145deg, #8f0000 0%, #b30000 58%, #d61a20 100%);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
 
-body{
-margin:0;
-font-family:Arial, Helvetica, sans-serif;
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:linear-gradient(135deg,#8b0000,#ff3b3b);
-}
+    .painel-esquerdo::before,
+    .painel-esquerdo::after{
+      content:"";
+      position:absolute;
+      border-radius:999px;
+      background:rgba(255,255,255,0.06);
+      filter:blur(2px);
+    }
 
-.container{
-display:flex;
-width:950px;
-max-width:95%;
-background:white;
-border-radius:14px;
-overflow:hidden;
-box-shadow:0 15px 40px rgba(0,0,0,0.25);
-}
+    .painel-esquerdo::before{
+      width:220px;
+      height:220px;
+      top:-60px;
+      right:-40px;
+    }
 
-.lado-esquerdo{
-flex:1;
-background:#8b0000;
-color:white;
-padding:50px;
-display:flex;
-flex-direction:column;
-justify-content:center;
-}
+    .painel-esquerdo::after{
+      width:180px;
+      height:180px;
+      bottom:-50px;
+      left:-40px;
+    }
 
-.logo{
-margin-bottom:30px;
-}
+    .logo-box{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      max-width:360px;
+      padding:18px;
+      background:rgba(255,255,255,0.96);
+      border-radius:22px;
+      box-shadow:0 12px 28px rgba(0,0,0,0.16);
+      margin-bottom:32px;
+      z-index:1;
+    }
 
-.logo img{
-width:260px;
-}
+    .logo-box img{
+      width:100%;
+      height:auto;
+      display:block;
+    }
 
-.lado-esquerdo h1{
-margin:0;
-font-size:32px;
-margin-bottom:10px;
-}
+    .titulo-sistema{
+      font-size:42px;
+      font-weight:700;
+      margin:0 0 16px 0;
+      z-index:1;
+    }
 
-.lado-esquerdo p{
-font-size:15px;
-line-height:1.6;
-opacity:0.9;
-}
+    .subtexto{
+      font-size:17px;
+      line-height:1.7;
+      margin:0 0 24px 0;
+      color:rgba(255,255,255,0.94);
+      max-width:520px;
+      z-index:1;
+    }
 
-.lado-direito{
-flex:1;
-padding:50px;
-display:flex;
-flex-direction:column;
-justify-content:center;
-}
+    .beneficios{
+      display:grid;
+      gap:14px;
+      margin-top:6px;
+      z-index:1;
+    }
 
-.lado-direito h2{
-margin-top:0;
-margin-bottom:20px;
-color:#8b0000;
-}
+    .beneficio{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:14px;
+      padding:14px 16px;
+      max-width:520px;
+    }
 
-input{
-width:100%;
-padding:12px;
-margin-bottom:14px;
-border-radius:6px;
-border:1px solid #ccc;
-font-size:14px;
-}
+    .beneficio-icone{
+      font-size:20px;
+      line-height:1;
+      margin-top:2px;
+    }
 
-button{
-width:100%;
-padding:12px;
-background:#8b0000;
-border:none;
-color:white;
-font-size:16px;
-border-radius:6px;
-cursor:pointer;
-transition:0.2s;
-}
+    .beneficio strong{
+      display:block;
+      margin-bottom:4px;
+      font-size:15px;
+    }
 
-button:hover{
-background:#650000;
-}
+    .beneficio span{
+      display:block;
+      font-size:14px;
+      color:rgba(255,255,255,0.88);
+      line-height:1.5;
+    }
 
-.footer{
-margin-top:20px;
-font-size:12px;
-color:#777;
-text-align:center;
-}
+    .painel-direito{
+      background:#f8f8f8;
+      padding:54px 44px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
 
-@media(max-width:750px){
+    .card-login{
+      width:100%;
+      max-width:390px;
+      background:white;
+      border-radius:20px;
+      padding:34px 30px 28px;
+      box-shadow:0 16px 35px rgba(0,0,0,0.10);
+      border:1px solid #eeeeee;
+    }
 
-.container{
-flex-direction:column;
-}
+    .login-topo{
+      text-align:center;
+      margin-bottom:28px;
+    }
 
-.lado-esquerdo{
-text-align:center;
-}
+    .login-topo h2{
+      margin:0 0 8px 0;
+      color:#a40000;
+      font-size:32px;
+    }
 
-.logo img{
-width:200px;
-}
+    .login-topo p{
+      margin:0;
+      color:#666;
+      font-size:14px;
+      line-height:1.5;
+    }
 
-}
+    .campo{
+      margin-bottom:16px;
+    }
 
-</style>
+    .campo label{
+      display:block;
+      margin-bottom:7px;
+      font-size:14px;
+      color:#555;
+      font-weight:600;
+    }
 
+    .campo input{
+      width:100%;
+      padding:14px 14px;
+      border-radius:12px;
+      border:1px solid #d7d7d7;
+      font-size:15px;
+      outline:none;
+      transition:0.2s;
+      background:#fcfcfc;
+    }
+
+    .campo input:focus{
+      border-color:#b30000;
+      box-shadow:0 0 0 4px rgba(179,0,0,0.10);
+      background:white;
+    }
+
+    .botao-login{
+      width:100%;
+      border:none;
+      border-radius:12px;
+      background:linear-gradient(135deg, #b30000 0%, #d60000 100%);
+      color:white;
+      padding:15px;
+      font-size:16px;
+      font-weight:700;
+      cursor:pointer;
+      transition:0.2s;
+      margin-top:6px;
+      box-shadow:0 10px 18px rgba(179,0,0,0.22);
+    }
+
+    .botao-login:hover{
+      transform:translateY(-1px);
+      filter:brightness(1.03);
+    }
+
+    .mensagem{
+      margin-top:16px;
+      min-height:22px;
+      text-align:center;
+      font-size:14px;
+      color:#b30000;
+      font-weight:600;
+    }
+
+    .rodape-login{
+      margin-top:22px;
+      text-align:center;
+      color:#888;
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    @media (max-width: 900px){
+      .wrapper{
+        grid-template-columns:1fr;
+        max-width:640px;
+      }
+
+      .painel-esquerdo{
+        padding:34px 28px;
+      }
+
+      .titulo-sistema{
+        font-size:34px;
+      }
+
+      .painel-direito{
+        padding:28px 22px 34px;
+      }
+
+      .logo-box{
+        max-width:300px;
+      }
+    }
+
+    @media (max-width: 560px){
+      body{
+        padding:14px;
+      }
+
+      .wrapper{
+        border-radius:18px;
+      }
+
+      .painel-esquerdo{
+        padding:26px 20px;
+      }
+
+      .painel-direito{
+        padding:18px 14px 22px;
+      }
+
+      .card-login{
+        padding:26px 20px 22px;
+        border-radius:16px;
+      }
+
+      .titulo-sistema{
+        font-size:28px;
+      }
+
+      .subtexto{
+        font-size:15px;
+      }
+
+      .login-topo h2{
+        font-size:28px;
+      }
+
+      .beneficio{
+        padding:12px 13px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="wrapper">
 
-<div class="container">
+    <section class="painel-esquerdo">
+      <div class="logo-box">
+        <img src="logo-gsh.png" alt="Logo Grupo GSH">
+      </div>
 
-<div class="lado-esquerdo">
+      <h1 class="titulo-sistema">HemoGestor</h1>
 
-<div class="logo">
-<img src="logo-gsh.png">
-</div>
+      <p class="subtexto">
+        Plataforma de gestão hemoterápica para controle seguro das transfusões,
+        reações transfusionais, indicadores, estoque e rastreabilidade das agências.
+      </p>
 
-<h1>HemoGestor</h1>
+      <div class="beneficios">
+        <div class="beneficio">
+          <div class="beneficio-icone">🩸</div>
+          <div>
+            <strong>Segurança transfusional</strong>
+            <span>Registro estruturado, acompanhamento e monitoramento das etapas assistenciais.</span>
+          </div>
+        </div>
 
-<p>
-Sistema de gestão hemoterápica para controle completo das atividades
-transfusionais das agências.
-</p>
+        <div class="beneficio">
+          <div class="beneficio-icone">📊</div>
+          <div>
+            <strong>Indicadores em tempo real</strong>
+            <span>Visualize produção, reações, taxa transfusional e desempenho por agência.</span>
+          </div>
+        </div>
 
-<p>
-Registre transfusões, monitore reações, acompanhe indicadores,
-controle o estoque e garanta rastreabilidade e segurança transfusional.
-</p>
+        <div class="beneficio">
+          <div class="beneficio-icone">🏥</div>
+          <div>
+            <strong>Gestão multiagência</strong>
+            <span>Organização por unidade com controle de acesso por perfil e rastreabilidade.</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-</div>
+    <section class="painel-direito">
+      <div class="card-login">
+        <div class="login-topo">
+          <h2>Entrar no sistema</h2>
+          <p>Acesse sua conta para utilizar o HemoGestor.</p>
+        </div>
 
-<div class="lado-direito">
+        <div class="campo">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="Digite seu email">
+        </div>
 
-<h2>Acessar sistema</h2>
+        <div class="campo">
+          <label for="senha">Senha</label>
+          <input id="senha" type="password" placeholder="Digite sua senha">
+        </div>
 
-<input id="email" placeholder="Email">
+        <button class="botao-login" onclick="login()">Entrar</button>
 
-<input id="senha" type="password" placeholder="Senha">
+        <div class="mensagem" id="mensagem"></div>
 
-<button onclick="login()">Entrar</button>
+        <div class="rodape-login">
+          HemoGestor • Sistema de Gestão Hemoterápica
+        </div>
+      </div>
+    </section>
 
-<div class="footer">
-HemoGestor • Sistema Hemoterápico
-</div>
+  </div>
 
-</div>
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
-</div>
+    const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
+    const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
 
-<script type="module">
+    const supabase = createClient(supabaseUrl, supabaseKey)
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+    window.login = async () => {
+      const email = document.getElementById("email").value.trim()
+      const senha = document.getElementById("senha").value
+      const mensagem = document.getElementById("mensagem")
 
-const supabaseUrl="https://awtszrqsnsgncdrlzizy.supabase.co"
-const supabaseKey="SUA_CHAVE_PUBLICA_AQUI"
+      mensagem.innerText = ""
 
-const supabase=createClient(supabaseUrl,supabaseKey)
+      if(!email || !senha){
+        mensagem.innerText = "Preencha email e senha."
+        return
+      }
 
-window.login=async()=>{
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password: senha
+      })
 
-const email=document.getElementById("email").value
-const senha=document.getElementById("senha").value
+      if(error){
+        mensagem.innerText = "Email ou senha inválidos."
+        return
+      }
 
-const {error}=await supabase.auth.signInWithPassword({
-email,
-password:senha
-})
+      const { data } = await supabase
+        .from("usuarios")
+        .select("*")
+        .eq("email", email)
+        .single()
 
-if(error){
-
-alert("Email ou senha inválidos")
-return
-
-}
-
-const {data}=await supabase
-.from("usuarios")
-.select("*")
-.eq("email",email)
-.single()
-
-if(data.primeiro_login){
-
-window.location="trocar-senha.html"
-
-}else{
-
-window.location="dashboard.html"
-
-}
-
-}
-
-</script>
-
+      if(data?.primeiro_login){
+        window.location = "trocar-senha.html"
+      } else {
+        window.location = "dashboard.html"
+      }
+    }
+  </script>
 </body>
-
 </html>
