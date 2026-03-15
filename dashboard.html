@@ -1,113 +1,180 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HemoGestor - Dashboard</title>
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-<title>HemoGestor</title>
+    const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co";
+    const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb";
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
-<script type="module">
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) {
+      window.location.href = "/";
+    }
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+    window.logout = async function () {
+      await supabase.auth.signOut();
+      window.location.href = "/";
+    };
+  </script>
 
-const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
-const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
-
-const supabase = createClient(supabaseUrl, supabaseKey)
-
-const { data } = await supabase.auth.getSession()
-
-if(!data.session){
-
-window.location.href="/"
-
-}
-
-</script>
-
-<style>
-
-body{
-margin:0;
-font-family:Arial;
-background:#f5f5f5;
-}
-
-.topo{
-background:#b30000;
-color:white;
-padding:20px;
-font-size:22px;
-font-weight:bold;
-display:flex;
-justify-content:space-between;
-}
-
-.container{
-padding:30px;
-}
-
-.card{
-background:white;
-padding:25px;
-border-radius:12px;
-box-shadow:0 0 12px rgba(0,0,0,0.08);
-}
-
-button{
-background:#c40000;
-color:white;
-border:none;
-padding:10px 15px;
-border-radius:6px;
-cursor:pointer;
-}
-
-</style>
-
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+    .topo {
+      background: #b30000;
+      color: white;
+      padding: 20px 24px;
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .topo button {
+      background: #d91c1c;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .container {
+      padding: 28px;
+    }
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.08);
+      margin-bottom: 22px;
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .modulo {
+      display: block;
+      text-decoration: none;
+      color: #222;
+      background: #fff;
+      border: 2px solid #ececec;
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.04);
+      transition: 0.2s;
+    }
+    .modulo:hover {
+      border-color: #b30000;
+      transform: translateY(-2px);
+    }
+    .modulo strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: #b30000;
+    }
+    .indicadores {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .mini-card {
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 18px;
+      border: 1px solid #eee;
+    }
+    .mini-card span {
+      display: block;
+      color: #666;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .mini-card strong {
+      font-size: 28px;
+      color: #b30000;
+    }
+  </style>
 </head>
-
 <body>
+  <div class="topo">
+    <span>HemoGestor</span>
+    <button onclick="logout()">Sair</button>
+  </div>
 
-<div class="topo">
+  <div class="container">
+    <div class="card">
+      <h2>Dashboard inicial</h2>
+      <p>Bem-vindo ao HemoGestor. Escolha um módulo abaixo para começar.</p>
 
-<span>HemoGestor</span>
+      <div class="indicadores">
+        <div class="mini-card">
+          <span>Transfusões do mês</span>
+          <strong>0</strong>
+        </div>
+        <div class="mini-card">
+          <span>Reações registradas</span>
+          <strong>0</strong>
+        </div>
+        <div class="mini-card">
+          <span>Indicadores ativos</span>
+          <strong>0</strong>
+        </div>
+        <div class="mini-card">
+          <span>Itens em estoque</span>
+          <strong>0</strong>
+        </div>
+      </div>
+    </div>
 
-<button onclick="logout()">Sair</button>
+    <div class="grid">
+      <a class="modulo" href="transfusoes.html">
+        <strong>Registrar transfusão</strong>
+        Cadastro e acompanhamento dos atos transfusionais.
+      </a>
 
-</div>
+      <a class="modulo" href="reacoes.html">
+        <strong>Reação transfusional</strong>
+        Registro, classificação e histórico de reações.
+      </a>
 
-<div class="container">
+      <a class="modulo" href="indicadores.html">
+        <strong>Indicadores</strong>
+        Indicadores hemoterápicos e análises automáticas.
+      </a>
 
-<div class="card">
+      <a class="modulo" href="estoque.html">
+        <strong>Estoque</strong>
+        Controle de entrada, saída e descarte.
+      </a>
 
-<h2>Dashboard inicial</h2>
+      <a class="modulo" href="relatorios.html">
+        <strong>Relatórios</strong>
+        Exportação e visualização de relatórios do sistema.
+      </a>
 
-<p>Login funcionando com sucesso.</p>
-
-</div>
-
-</div>
-
-<script type="module">
-
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
-
-const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
-const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
-
-const supabase = createClient(supabaseUrl, supabaseKey)
-
-window.logout = async function(){
-
-await supabase.auth.signOut()
-
-window.location.href="/"
-
-}
-
-</script>
-
+      <a class="modulo" href="usuarios.html">
+        <strong>Usuários</strong>
+        Perfis, permissões e vínculo com agências.
+      </a>
+    </div>
+  </div>
 </body>
 </html>
