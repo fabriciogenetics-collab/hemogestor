@@ -103,6 +103,14 @@ padding:10px;
 text-align:left;
 }
 
+.info-agencia{
+background:#eef6ff;
+border:1px solid #cfe2ff;
+padding:12px;
+border-radius:8px;
+margin-bottom:20px;
+}
+
 </style>
 
 </head>
@@ -115,6 +123,10 @@ Estoque de Insumos
 </div>
 
 <div class="container">
+
+<div class="info-agencia">
+Agência do usuário logado: <strong id="agenciaLogada">Carregando...</strong>
+</div>
 
 <div id="alertaEstoque"></div>
 
@@ -165,6 +177,7 @@ Estoque de Insumos
 <thead>
 <tr>
 <th>Data</th>
+<th>Agência</th>
 <th>Item</th>
 <th>Tipo</th>
 <th>Quantidade</th>
@@ -189,6 +202,26 @@ const supabaseKey="sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
 
 const supabase=createClient(supabaseUrl,supabaseKey)
 
+let agenciaUsuario=""
+
+async function carregarUsuario(){
+
+const {data}=await supabase.auth.getSession()
+
+const email=data.session.user.email
+
+const {data:usuario}=await supabase
+.from("usuarios")
+.select("*")
+.eq("email",email)
+.single()
+
+agenciaUsuario=usuario.agencia
+
+document.getElementById("agenciaLogada").innerText=agenciaUsuario
+
+}
+
 async function salvar(){
 
 const item=document.getElementById("item").value
@@ -200,7 +233,15 @@ const data=document.getElementById("data").value
 
 await supabase
 .from("estoque")
-.insert([{item,tipo_movimento:tipo,quantidade,motivo,lote,data_movimento:data}])
+.insert([{
+agencia:agenciaUsuario,
+item,
+tipo_movimento:tipo,
+quantidade,
+motivo,
+lote,
+data_movimento:data
+}])
 
 carregar()
 
@@ -211,6 +252,7 @@ async function carregar(){
 const {data}=await supabase
 .from("estoque")
 .select("*")
+.eq("agencia",agenciaUsuario)
 
 const lista=document.getElementById("lista")
 lista.innerHTML=""
@@ -222,10 +264,11 @@ data.forEach(m=>{
 lista.innerHTML+=`
 <tr>
 <td>${m.data_movimento}</td>
+<td>${m.agencia}</td>
 <td>${m.item}</td>
 <td>${m.tipo_movimento}</td>
 <td>${m.quantidade}</td>
-<td>${m.motivo||""}</td>
+<td>${m.motivo || ""}</td>
 </tr>
 `
 
@@ -277,6 +320,7 @@ document.getElementById("alertaEstoque").innerHTML=""
 
 }
 
+await carregarUsuario()
 carregar()
 
 </script>
