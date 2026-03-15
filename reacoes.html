@@ -1,25 +1,400 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HemoGestor - Reações</title>
-  <style>
-    body { margin: 0; font-family: Arial, sans-serif; background: #f5f5f5; }
-    .topo { background: #b30000; color: white; padding: 20px 24px; font-size: 24px; font-weight: bold; }
-    .container { padding: 28px; }
-    .card { background: white; padding: 24px; border-radius: 14px; box-shadow: 0 0 12px rgba(0,0,0,0.08); }
-    a { color: #b30000; text-decoration: none; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reação Transfusional</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f4f4;
+}
+
+.topo{
+  background:#b30000;
+  color:white;
+  padding:20px;
+  font-size:22px;
+  font-weight:bold;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.topo a{
+  color:white;
+  text-decoration:none;
+  background:#d91c1c;
+  padding:10px 15px;
+  border-radius:6px;
+}
+
+.container{
+  padding:30px;
+}
+
+.card{
+  background:white;
+  padding:25px;
+  border-radius:10px;
+  box-shadow:0 0 10px rgba(0,0,0,0.1);
+  max-width:1100px;
+  margin-bottom:30px;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  margin-bottom:15px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  box-sizing:border-box;
+  font-size:15px;
+}
+
+textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+button{
+  background:#c40000;
+  color:white;
+  border:none;
+  padding:12px 18px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:16px;
+  margin-right:8px;
+}
+
+button.secundario{
+  background:#666;
+}
+
+button.excluir{
+  background:#8b0000;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+
+th,td{
+  border-bottom:1px solid #ddd;
+  padding:10px;
+  text-align:left;
+  font-size:14px;
+  vertical-align:top;
+}
+
+th{
+  background:#fafafa;
+}
+
+.acoes button{
+  padding:8px 10px;
+  font-size:13px;
+  margin-bottom:4px;
+}
+
+.info-edicao{
+  background:#fff3cd;
+  color:#856404;
+  border:1px solid #ffeeba;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:15px;
+  display:none;
+}
+</style>
 </head>
+
 <body>
-  <div class="topo">HemoGestor - Reação transfusional</div>
-  <div class="container">
-    <div class="card">
-      <h2>Módulo de reações transfusionais</h2>
-      <p>Este módulo será usado para registrar e classificar reações.</p>
-      <p><a href="dashboard.html">← Voltar ao dashboard</a></p>
+
+<div class="topo">
+  <span>Reação Transfusional</span>
+  <a href="dashboard.html">Voltar</a>
+</div>
+
+<div class="container">
+
+  <div class="card">
+    <h3>Nova reação transfusional</h3>
+
+    <div id="infoEdicao" class="info-edicao">
+      Você está editando uma reação transfusional.
     </div>
+
+    <label>Paciente *</label>
+    <input id="paciente" placeholder="Nome ou identificação do paciente">
+
+    <label>Prontuário</label>
+    <input id="prontuario" placeholder="Número do prontuário">
+
+    <label>Data da reação *</label>
+    <input type="date" id="data_reacao">
+
+    <label>Tipo de reação *</label>
+    <select id="tipo_reacao">
+      <option value="">Selecione</option>
+      <option>Febril não hemolítica</option>
+      <option>Alérgica</option>
+      <option>Anafilática</option>
+      <option>Hemolítica aguda</option>
+      <option>Sobrecarga circulatória</option>
+      <option>TRALI</option>
+      <option>Contaminação bacteriana</option>
+      <option>Outra</option>
+    </select>
+
+    <label>Classificação</label>
+    <select id="classificacao">
+      <option value="">Selecione</option>
+      <option>Leve</option>
+      <option>Moderada</option>
+      <option>Grave</option>
+    </select>
+
+    <label>Conduta</label>
+    <textarea id="conduta" placeholder="Descreva a conduta realizada"></textarea>
+
+    <label>Desfecho</label>
+    <textarea id="desfecho" placeholder="Descreva o desfecho"></textarea>
+
+    <label>Observações</label>
+    <textarea id="observacoes" placeholder="Observações adicionais"></textarea>
+
+    <button id="btnSalvar">Salvar reação</button>
+    <button id="btnCancelar" class="secundario" style="display:none;">Cancelar edição</button>
   </div>
+
+  <div class="card">
+    <h3>Reações registradas</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Paciente</th>
+          <th>Tipo</th>
+          <th>Classificação</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="lista"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+
+const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
+const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
+
+const supabase = createClient(supabaseUrl, supabaseKey)
+
+let editandoId = null
+
+function limparFormulario(){
+  document.getElementById("paciente").value = ""
+  document.getElementById("prontuario").value = ""
+  document.getElementById("data_reacao").value = ""
+  document.getElementById("tipo_reacao").value = ""
+  document.getElementById("classificacao").value = ""
+  document.getElementById("conduta").value = ""
+  document.getElementById("desfecho").value = ""
+  document.getElementById("observacoes").value = ""
+}
+
+function entrarModoEdicao(registro){
+  editandoId = registro.id
+
+  document.getElementById("paciente").value = registro.paciente || ""
+  document.getElementById("prontuario").value = registro.prontuario || ""
+  document.getElementById("data_reacao").value = registro.data_reacao || ""
+  document.getElementById("tipo_reacao").value = registro.tipo_reacao || ""
+  document.getElementById("classificacao").value = registro.classificacao || ""
+  document.getElementById("conduta").value = registro.conduta || ""
+  document.getElementById("desfecho").value = registro.desfecho || ""
+  document.getElementById("observacoes").value = registro.observacoes || ""
+
+  document.getElementById("infoEdicao").style.display = "block"
+  document.getElementById("btnSalvar").innerText = "Atualizar reação"
+  document.getElementById("btnCancelar").style.display = "inline-block"
+
+  window.scrollTo({ top: 0, behavior: "smooth" })
+}
+
+function sairModoEdicao(){
+  editandoId = null
+  limparFormulario()
+  document.getElementById("infoEdicao").style.display = "none"
+  document.getElementById("btnSalvar").innerText = "Salvar reação"
+  document.getElementById("btnCancelar").style.display = "none"
+}
+
+async function carregar(){
+  const { data, error } = await supabase
+    .from("reacoes_transfusionais")
+    .select("*")
+    .order("created_at", { ascending:false })
+
+  const lista = document.getElementById("lista")
+  lista.innerHTML = ""
+
+  if(error){
+    lista.innerHTML = `<tr><td colspan="5">Erro ao carregar registros: ${error.message}</td></tr>`
+    return
+  }
+
+  if(!data || data.length === 0){
+    lista.innerHTML = `<tr><td colspan="5">Nenhuma reação registrada.</td></tr>`
+    return
+  }
+
+  data.forEach(r => {
+    const tr = document.createElement("tr")
+
+    tr.innerHTML = `
+      <td>${r.data_reacao ?? ""}</td>
+      <td>${r.paciente ?? ""}</td>
+      <td>${r.tipo_reacao ?? ""}</td>
+      <td>${r.classificacao ?? ""}</td>
+      <td class="acoes">
+        <button data-acao="editar" data-id="${r.id}">Editar</button>
+        <button class="excluir" data-acao="excluir" data-id="${r.id}">Excluir</button>
+      </td>
+    `
+
+    lista.appendChild(tr)
+  })
+
+  lista.querySelectorAll('button[data-acao="editar"]').forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const id = btn.getAttribute("data-id")
+      const { data: registro, error } = await supabase
+        .from("reacoes_transfusionais")
+        .select("*")
+        .eq("id", id)
+        .single()
+
+      if(error){
+        alert("Erro ao buscar registro: " + error.message)
+        return
+      }
+
+      entrarModoEdicao(registro)
+    })
+  })
+
+  lista.querySelectorAll('button[data-acao="excluir"]').forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const id = btn.getAttribute("data-id")
+
+      const confirmar = confirm("Deseja realmente excluir esta reação transfusional?")
+      if(!confirmar) return
+
+      const { error } = await supabase
+        .from("reacoes_transfusionais")
+        .delete()
+        .eq("id", id)
+
+      if(error){
+        alert("Erro ao excluir: " + error.message)
+        return
+      }
+
+      alert("Reação excluída com sucesso")
+      if(editandoId && String(editandoId) === String(id)){
+        sairModoEdicao()
+      }
+      carregar()
+    })
+  })
+}
+
+document.getElementById("btnSalvar").addEventListener("click", async () => {
+  const paciente = document.getElementById("paciente").value.trim()
+  const prontuario = document.getElementById("prontuario").value.trim()
+  const data_reacao = document.getElementById("data_reacao").value
+  const tipo_reacao = document.getElementById("tipo_reacao").value
+  const classificacao = document.getElementById("classificacao").value
+  const conduta = document.getElementById("conduta").value.trim()
+  const desfecho = document.getElementById("desfecho").value.trim()
+  const observacoes = document.getElementById("observacoes").value.trim()
+
+  if(!paciente){
+    alert("Preencha o campo Paciente.")
+    return
+  }
+
+  if(!data_reacao){
+    alert("Preencha o campo Data da reação.")
+    return
+  }
+
+  if(!tipo_reacao){
+    alert("Selecione o Tipo de reação.")
+    return
+  }
+
+  const payload = {
+    paciente,
+    prontuario,
+    data_reacao,
+    tipo_reacao,
+    classificacao,
+    conduta,
+    desfecho,
+    observacoes
+  }
+
+  if(editandoId){
+    const { error } = await supabase
+      .from("reacoes_transfusionais")
+      .update(payload)
+      .eq("id", editandoId)
+
+    if(error){
+      alert("Erro ao atualizar: " + error.message)
+      return
+    }
+
+    alert("Reação atualizada com sucesso")
+    sairModoEdicao()
+    carregar()
+    return
+  }
+
+  const { error } = await supabase
+    .from("reacoes_transfusionais")
+    .insert([payload])
+
+  if(error){
+    alert("Erro ao salvar: " + error.message)
+    return
+  }
+
+  alert("Reação registrada com sucesso")
+  limparFormulario()
+  carregar()
+})
+
+document.getElementById("btnCancelar").addEventListener("click", () => {
+  sairModoEdicao()
+})
+
+carregar()
+</script>
+
 </body>
 </html>
