@@ -4,178 +4,204 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Registrar Transfusão</title>
 
 <style>
-
 body{
-margin:0;
-font-family:Arial;
-background:#f4f4f4;
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f4f4;
 }
 
 .topo{
-background:#b30000;
-color:white;
-padding:20px;
-font-size:22px;
-font-weight:bold;
-display:flex;
-justify-content:space-between;
-align-items:center;
+  background:#b30000;
+  color:white;
+  padding:20px;
+  font-size:22px;
+  font-weight:bold;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 .topo a{
-color:white;
-text-decoration:none;
-background:#d91c1c;
-padding:10px 15px;
-border-radius:6px;
+  color:white;
+  text-decoration:none;
+  background:#d91c1c;
+  padding:10px 15px;
+  border-radius:6px;
 }
 
 .container{
-padding:30px;
+  padding:30px;
 }
 
 .card{
-background:white;
-padding:25px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
-max-width:900px;
-margin-bottom:30px;
+  background:white;
+  padding:25px;
+  border-radius:10px;
+  box-shadow:0 0 10px rgba(0,0,0,0.1);
+  max-width:1100px;
+  margin-bottom:30px;
 }
 
 input,select,textarea{
-width:100%;
-padding:10px;
-margin-top:5px;
-margin-bottom:15px;
-border-radius:6px;
-border:1px solid #ccc;
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  margin-bottom:15px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  box-sizing:border-box;
+  font-size:15px;
+}
+
+textarea{
+  min-height:100px;
+  resize:vertical;
 }
 
 button{
-background:#c40000;
-color:white;
-border:none;
-padding:12px;
-border-radius:6px;
-cursor:pointer;
-font-size:16px;
+  background:#c40000;
+  color:white;
+  border:none;
+  padding:12px 18px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:16px;
+  margin-right:8px;
+}
+
+button.secundario{
+  background:#666;
+}
+
+button.excluir{
+  background:#8b0000;
 }
 
 table{
-width:100%;
-border-collapse:collapse;
-margin-top:10px;
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
 }
 
 th,td{
-border-bottom:1px solid #ddd;
-padding:10px;
-text-align:left;
-font-size:14px;
+  border-bottom:1px solid #ddd;
+  padding:10px;
+  text-align:left;
+  font-size:14px;
+  vertical-align:top;
 }
 
 th{
-background:#fafafa;
+  background:#fafafa;
 }
 
+.acoes button{
+  padding:8px 10px;
+  font-size:13px;
+  margin-bottom:4px;
+}
+
+.info-edicao{
+  background:#fff3cd;
+  color:#856404;
+  border:1px solid #ffeeba;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:15px;
+  display:none;
+}
 </style>
 </head>
 
 <body>
 
 <div class="topo">
-Registrar transfusão
-<a href="dashboard.html">Voltar</a>
+  <span>Registrar transfusão</span>
+  <a href="dashboard.html">Voltar</a>
 </div>
 
 <div class="container">
 
-<div class="card">
+  <div class="card">
+    <h3>Nova transfusão</h3>
 
-<h3>Nova transfusão</h3>
+    <div id="infoEdicao" class="info-edicao">
+      Você está editando uma transfusão.
+    </div>
 
-<label>Paciente *</label>
-<input id="paciente">
+    <label>Paciente *</label>
+    <input id="paciente" placeholder="Nome ou identificação do paciente">
 
-<label>Prontuário</label>
-<input id="prontuario">
+    <label>Prontuário</label>
+    <input id="prontuario" placeholder="Número do prontuário">
 
-<label>Leito</label>
-<input id="leito">
+    <label>Leito</label>
+    <input id="leito" placeholder="Ex.: UTI 2 / Leito 15">
 
-<label>Data *</label>
-<input type="date" id="data">
+    <label>Data da transfusão *</label>
+    <input type="date" id="data">
 
-<label>Hora</label>
-<input type="time" id="hora">
+    <label>Hora da transfusão</label>
+    <input type="time" id="hora">
 
-<label>Hemocomponente *</label>
-<select id="hemocomponente">
-<option value="">Selecione</option>
-<option>Concentrado de hemácias</option>
-<option>Plaquetas</option>
-<option>Plasma</option>
-<option>Crioprecipitado</option>
-</select>
+    <label>Hemocomponente *</label>
+    <select id="hemocomponente">
+      <option value="">Selecione</option>
+      <option>Concentrado de hemácias</option>
+      <option>Plaquetas</option>
+      <option>Plasma</option>
+      <option>Crioprecipitado</option>
+    </select>
 
-<label>Número da bolsa</label>
-<input id="bolsa">
+    <label>Número da bolsa</label>
+    <input id="bolsa" placeholder="Número da bolsa">
 
-<label>Volume</label>
-<input id="volume">
+    <label>Volume</label>
+    <input id="volume" placeholder="Ex.: 300 ml">
 
-<label>Médico solicitante</label>
-<input id="medico">
+    <label>Médico solicitante</label>
+    <input id="medico" placeholder="Nome do médico">
 
-<label>Profissional que instalou</label>
-<input id="profissional">
+    <label>Profissional que instalou</label>
+    <input id="profissional" placeholder="Nome do profissional">
 
-<label>Reação transfusional</label>
-<select id="reacao">
-<option>Não</option>
-<option>Sim</option>
-</select>
+    <label>Reação transfusional</label>
+    <select id="reacao">
+      <option>Não</option>
+      <option>Sim</option>
+    </select>
 
-<label>Observações</label>
-<textarea id="obs"></textarea>
+    <label>Observações</label>
+    <textarea id="obs" placeholder="Observações adicionais"></textarea>
 
-<button onclick="salvar()">Salvar transfusão</button>
+    <button id="btnSalvar">Salvar transfusão</button>
+    <button id="btnCancelar" class="secundario" style="display:none;">Cancelar edição</button>
+  </div>
 
-</div>
+  <div class="card">
+    <h3>Transfusões registradas</h3>
 
-<div class="card">
-
-<h3>Transfusões registradas</h3>
-
-<table>
-
-<thead>
-<tr>
-<th>Data</th>
-<th>Paciente</th>
-<th>Hemocomponente</th>
-<th>Bolsa</th>
-<th>Reação</th>
-</tr>
-</thead>
-
-<tbody id="lista">
-
-</tbody>
-
-</table>
-
-</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Paciente</th>
+          <th>Hemocomponente</th>
+          <th>Bolsa</th>
+          <th>Reação</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="lista"></tbody>
+    </table>
+  </div>
 
 </div>
 
 <script type="module">
-
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const supabaseUrl = "https://awtszrqsnsgncdrlzizy.supabase.co"
@@ -183,91 +209,216 @@ const supabaseKey = "sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 
+let editandoId = null
+
+function limparFormulario(){
+  document.getElementById("paciente").value = ""
+  document.getElementById("prontuario").value = ""
+  document.getElementById("leito").value = ""
+  document.getElementById("data").value = ""
+  document.getElementById("hora").value = ""
+  document.getElementById("hemocomponente").value = ""
+  document.getElementById("bolsa").value = ""
+  document.getElementById("volume").value = ""
+  document.getElementById("medico").value = ""
+  document.getElementById("profissional").value = ""
+  document.getElementById("reacao").value = "Não"
+  document.getElementById("obs").value = ""
+}
+
+function entrarModoEdicao(registro){
+  editandoId = registro.id
+
+  document.getElementById("paciente").value = registro.paciente || ""
+  document.getElementById("prontuario").value = registro.prontuario || ""
+  document.getElementById("leito").value = registro.leito || ""
+  document.getElementById("data").value = registro.data_transfusao || ""
+  document.getElementById("hora").value = registro.hora_transfusao || ""
+  document.getElementById("hemocomponente").value = registro.hemocomponente || ""
+  document.getElementById("bolsa").value = registro.numero_bolsa || ""
+  document.getElementById("volume").value = registro.volume || ""
+  document.getElementById("medico").value = registro.medico || ""
+  document.getElementById("profissional").value = registro.profissional || ""
+  document.getElementById("reacao").value = registro.reacao || "Não"
+  document.getElementById("obs").value = registro.observacoes || ""
+
+  document.getElementById("infoEdicao").style.display = "block"
+  document.getElementById("btnSalvar").innerText = "Atualizar transfusão"
+  document.getElementById("btnCancelar").style.display = "inline-block"
+
+  window.scrollTo({ top: 0, behavior: "smooth" })
+}
+
+function sairModoEdicao(){
+  editandoId = null
+  limparFormulario()
+  document.getElementById("infoEdicao").style.display = "none"
+  document.getElementById("btnSalvar").innerText = "Salvar transfusão"
+  document.getElementById("btnCancelar").style.display = "none"
+}
+
 async function carregar(){
+  const { data, error } = await supabase
+    .from("transfusoes")
+    .select("*")
+    .order("created_at", { ascending:false })
 
-const { data } = await supabase
-.from("transfusoes")
-.select("*")
-.order("created_at",{ascending:false})
+  const lista = document.getElementById("lista")
+  lista.innerHTML = ""
 
-const lista = document.getElementById("lista")
+  if(error){
+    lista.innerHTML = `<tr><td colspan="6">Erro ao carregar registros: ${error.message}</td></tr>`
+    return
+  }
 
-lista.innerHTML=""
+  if(!data || data.length === 0){
+    lista.innerHTML = `<tr><td colspan="6">Nenhuma transfusão registrada.</td></tr>`
+    return
+  }
 
-data.forEach(t=>{
+  data.forEach(t => {
+    const tr = document.createElement("tr")
 
-lista.innerHTML += `
-<tr>
-<td>${t.data_transfusao}</td>
-<td>${t.paciente}</td>
-<td>${t.hemocomponente}</td>
-<td>${t.numero_bolsa ?? ""}</td>
-<td>${t.reacao}</td>
-</tr>
-`
+    tr.innerHTML = `
+      <td>${t.data_transfusao ?? ""}</td>
+      <td>${t.paciente ?? ""}</td>
+      <td>${t.hemocomponente ?? ""}</td>
+      <td>${t.numero_bolsa ?? ""}</td>
+      <td>${t.reacao ?? ""}</td>
+      <td class="acoes">
+        <button data-acao="editar" data-id="${t.id}">Editar</button>
+        <button class="excluir" data-acao="excluir" data-id="${t.id}">Excluir</button>
+      </td>
+    `
 
+    lista.appendChild(tr)
+  })
+
+  lista.querySelectorAll('button[data-acao="editar"]').forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const id = btn.getAttribute("data-id")
+      const { data: registro, error } = await supabase
+        .from("transfusoes")
+        .select("*")
+        .eq("id", id)
+        .single()
+
+      if(error){
+        alert("Erro ao buscar registro: " + error.message)
+        return
+      }
+
+      entrarModoEdicao(registro)
+    })
+  })
+
+  lista.querySelectorAll('button[data-acao="excluir"]').forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const id = btn.getAttribute("data-id")
+
+      const confirmar = confirm("Deseja realmente excluir esta transfusão?")
+      if(!confirmar) return
+
+      const { error } = await supabase
+        .from("transfusoes")
+        .delete()
+        .eq("id", id)
+
+      if(error){
+        alert("Erro ao excluir: " + error.message)
+        return
+      }
+
+      alert("Transfusão excluída com sucesso")
+      if(editandoId && String(editandoId) === String(id)){
+        sairModoEdicao()
+      }
+      carregar()
+    })
+  })
+}
+
+document.getElementById("btnSalvar").addEventListener("click", async () => {
+  const paciente = document.getElementById("paciente").value.trim()
+  const prontuario = document.getElementById("prontuario").value.trim()
+  const leito = document.getElementById("leito").value.trim()
+  const data = document.getElementById("data").value
+  const hora = document.getElementById("hora").value
+  const hemocomponente = document.getElementById("hemocomponente").value
+  const numero_bolsa = document.getElementById("bolsa").value.trim()
+  const volume = document.getElementById("volume").value.trim()
+  const medico = document.getElementById("medico").value.trim()
+  const profissional = document.getElementById("profissional").value.trim()
+  const reacao = document.getElementById("reacao").value
+  const observacoes = document.getElementById("obs").value.trim()
+
+  if(!paciente){
+    alert("Preencha o campo Paciente.")
+    return
+  }
+
+  if(!data){
+    alert("Preencha o campo Data da transfusão.")
+    return
+  }
+
+  if(!hemocomponente){
+    alert("Selecione o Hemocomponente.")
+    return
+  }
+
+  const payload = {
+    paciente,
+    prontuario,
+    leito,
+    data_transfusao: data,
+    hora_transfusao: hora,
+    hemocomponente,
+    numero_bolsa,
+    volume,
+    medico,
+    profissional,
+    reacao,
+    observacoes
+  }
+
+  if(editandoId){
+    const { error } = await supabase
+      .from("transfusoes")
+      .update(payload)
+      .eq("id", editandoId)
+
+    if(error){
+      alert("Erro ao atualizar: " + error.message)
+      return
+    }
+
+    alert("Transfusão atualizada com sucesso")
+    sairModoEdicao()
+    carregar()
+    return
+  }
+
+  const { error } = await supabase
+    .from("transfusoes")
+    .insert([payload])
+
+  if(error){
+    alert("Erro ao salvar: " + error.message)
+    return
+  }
+
+  alert("Transfusão registrada com sucesso")
+  limparFormulario()
+  carregar()
 })
 
-}
-
-window.salvar = async function(){
-
-const paciente = document.getElementById("paciente").value
-const prontuario = document.getElementById("prontuario").value
-const leito = document.getElementById("leito").value
-const data = document.getElementById("data").value
-const hora = document.getElementById("hora").value
-const hemocomponente = document.getElementById("hemocomponente").value
-const numero_bolsa = document.getElementById("bolsa").value
-const volume = document.getElementById("volume").value
-const medico = document.getElementById("medico").value
-const profissional = document.getElementById("profissional").value
-const reacao = document.getElementById("reacao").value
-const observacoes = document.getElementById("obs").value
-
-if(!paciente || !data || !hemocomponente){
-
-alert("Preencha Paciente, Data e Hemocomponente")
-
-return
-
-}
-
-const { error } = await supabase
-.from("transfusoes")
-.insert([{
-paciente,
-prontuario,
-leito,
-data_transfusao:data,
-hora_transfusao:hora,
-hemocomponente,
-numero_bolsa,
-volume,
-medico,
-profissional,
-reacao,
-observacoes
-}])
-
-if(error){
-
-alert(error.message)
-
-}else{
-
-alert("Transfusão registrada")
+document.getElementById("btnCancelar").addEventListener("click", () => {
+  sairModoEdicao()
+})
 
 carregar()
-
-}
-
-}
-
-carregar()
-
 </script>
 
 </body>
-
 </html>
