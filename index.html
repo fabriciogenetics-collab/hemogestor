@@ -21,47 +21,52 @@ height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-background:linear-gradient(135deg,#b30000,#ff4d4d);
+background:linear-gradient(135deg,#8b0000,#ff3b3b);
 }
 
 .container{
 display:flex;
-width:900px;
+width:950px;
 max-width:95%;
 background:white;
-border-radius:12px;
+border-radius:14px;
 overflow:hidden;
-box-shadow:0 15px 40px rgba(0,0,0,0.2);
+box-shadow:0 15px 40px rgba(0,0,0,0.25);
 }
 
 .lado-esquerdo{
 flex:1;
-background:#b30000;
+background:#8b0000;
 color:white;
-padding:40px;
+padding:50px;
 display:flex;
 flex-direction:column;
 justify-content:center;
 }
 
+.logo{
+margin-bottom:30px;
+}
+
+.logo img{
+width:260px;
+}
+
 .lado-esquerdo h1{
-margin-top:0;
-font-size:34px;
+margin:0;
+font-size:32px;
+margin-bottom:10px;
 }
 
 .lado-esquerdo p{
-font-size:16px;
+font-size:15px;
+line-height:1.6;
 opacity:0.9;
-}
-
-.logo{
-font-size:42px;
-margin-bottom:20px;
 }
 
 .lado-direito{
 flex:1;
-padding:40px;
+padding:50px;
 display:flex;
 flex-direction:column;
 justify-content:center;
@@ -70,13 +75,13 @@ justify-content:center;
 .lado-direito h2{
 margin-top:0;
 margin-bottom:20px;
-color:#b30000;
+color:#8b0000;
 }
 
 input{
 width:100%;
 padding:12px;
-margin-bottom:12px;
+margin-bottom:14px;
 border-radius:6px;
 border:1px solid #ccc;
 font-size:14px;
@@ -85,7 +90,7 @@ font-size:14px;
 button{
 width:100%;
 padding:12px;
-background:#b30000;
+background:#8b0000;
 border:none;
 color:white;
 font-size:16px;
@@ -95,7 +100,7 @@ transition:0.2s;
 }
 
 button:hover{
-background:#8f0000;
+background:#650000;
 }
 
 .footer{
@@ -105,7 +110,7 @@ color:#777;
 text-align:center;
 }
 
-@media(max-width:700px){
+@media(max-width:750px){
 
 .container{
 flex-direction:column;
@@ -113,6 +118,10 @@ flex-direction:column;
 
 .lado-esquerdo{
 text-align:center;
+}
+
+.logo img{
+width:200px;
 }
 
 }
@@ -128,27 +137,26 @@ text-align:center;
 <div class="lado-esquerdo">
 
 <div class="logo">
-🩸
+<img src="logo-gsh.png">
 </div>
 
 <h1>HemoGestor</h1>
 
 <p>
-Sistema de gestão hemoterápica desenvolvido para apoiar
-a segurança transfusional, rastreabilidade e gestão
-das agências transfusionais.
+Sistema de gestão hemoterápica para controle completo das atividades
+transfusionais das agências.
 </p>
 
 <p>
-Controle de transfusões, reações, estoque, indicadores
-e acompanhamento transfusional em um único sistema.
+Registre transfusões, monitore reações, acompanhe indicadores,
+controle o estoque e garanta rastreabilidade e segurança transfusional.
 </p>
 
 </div>
 
 <div class="lado-direito">
 
-<h2>Entrar no sistema</h2>
+<h2>Acessar sistema</h2>
 
 <input id="email" placeholder="Email">
 
@@ -169,7 +177,7 @@ HemoGestor • Sistema Hemoterápico
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const supabaseUrl="https://awtszrqsnsgncdrlzizy.supabase.co"
-const supabaseKey="sb_publishable_z32nrrXomlRC-Ke4wVqZJA_o7FikqDb"
+const supabaseKey="SUA_CHAVE_PUBLICA_AQUI"
 
 const supabase=createClient(supabaseUrl,supabaseKey)
 
@@ -185,7 +193,7 @@ password:senha
 
 if(error){
 
-alert("Login inválido")
+alert("Email ou senha inválidos")
 return
 
 }
