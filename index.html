@@ -6,48 +6,115 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Login - HemoGestor</title>
+<title>HemoGestor</title>
 
 <style>
 
+*{
+box-sizing:border-box;
+}
+
 body{
-font-family:Arial;
-background:#f4f4f4;
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
-margin:0;
+background:linear-gradient(135deg,#b30000,#ff4d4d);
 }
 
-.card{
+.container{
+display:flex;
+width:900px;
+max-width:95%;
 background:white;
-padding:30px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
-width:350px;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 15px 40px rgba(0,0,0,0.2);
 }
 
-h2{
+.lado-esquerdo{
+flex:1;
+background:#b30000;
+color:white;
+padding:40px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+}
+
+.lado-esquerdo h1{
 margin-top:0;
+font-size:34px;
+}
+
+.lado-esquerdo p{
+font-size:16px;
+opacity:0.9;
+}
+
+.logo{
+font-size:42px;
+margin-bottom:20px;
+}
+
+.lado-direito{
+flex:1;
+padding:40px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+}
+
+.lado-direito h2{
+margin-top:0;
+margin-bottom:20px;
+color:#b30000;
 }
 
 input{
 width:100%;
-padding:10px;
-margin-bottom:10px;
+padding:12px;
+margin-bottom:12px;
 border-radius:6px;
 border:1px solid #ccc;
+font-size:14px;
 }
 
 button{
 width:100%;
 padding:12px;
 background:#b30000;
-color:white;
 border:none;
+color:white;
+font-size:16px;
 border-radius:6px;
 cursor:pointer;
+transition:0.2s;
+}
+
+button:hover{
+background:#8f0000;
+}
+
+.footer{
+margin-top:20px;
+font-size:12px;
+color:#777;
+text-align:center;
+}
+
+@media(max-width:700px){
+
+.container{
+flex-direction:column;
+}
+
+.lado-esquerdo{
+text-align:center;
+}
+
 }
 
 </style>
@@ -56,15 +123,44 @@ cursor:pointer;
 
 <body>
 
-<div class="card">
+<div class="container">
 
-<h2>HemoGestor</h2>
+<div class="lado-esquerdo">
+
+<div class="logo">
+🩸
+</div>
+
+<h1>HemoGestor</h1>
+
+<p>
+Sistema de gestão hemoterápica desenvolvido para apoiar
+a segurança transfusional, rastreabilidade e gestão
+das agências transfusionais.
+</p>
+
+<p>
+Controle de transfusões, reações, estoque, indicadores
+e acompanhamento transfusional em um único sistema.
+</p>
+
+</div>
+
+<div class="lado-direito">
+
+<h2>Entrar no sistema</h2>
 
 <input id="email" placeholder="Email">
 
 <input id="senha" type="password" placeholder="Senha">
 
 <button onclick="login()">Entrar</button>
+
+<div class="footer">
+HemoGestor • Sistema Hemoterápico
+</div>
+
+</div>
 
 </div>
 
